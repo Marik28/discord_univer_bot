@@ -5,7 +5,8 @@ from discord.ext.commands import Context
 
 import config
 from exceptions import ErrorFromServer, EmptyJsonError
-from services import get_week_parity, get_day_schedule, get_week_schedule, make_embed_day_schedule
+from services import get_week_parity, get_day_schedule, get_week_schedule, make_embed_day_schedule, \
+    make_embed_week_schedule
 
 bot = commands.Bot(command_prefix='!')
 
@@ -22,6 +23,7 @@ async def hello(ctx: Context):
 
 @bot.command(name='расписание')
 async def process_day_schedule_command(ctx: Context, day: str, parity=None):
+    """Узнает расписание на конкретный день недели. Если не указана четность недели, берется четность текущей недели"""
     if parity is None:
         parity = get_week_parity()
     try:
@@ -39,7 +41,12 @@ async def process_day_schedule_command(ctx: Context, day: str, parity=None):
 async def process_week_schedule_command(ctx: Context, parity=None):
     if parity is None:
         parity = get_week_parity()
-    get_week_schedule(parity)
-
+    try:
+        row_week_schedule = get_week_schedule(parity)
+    except ErrorFromServer as e:
+        await ctx.send(str(e))
+        return
+    else:
+        await ctx.send(embed=make_embed_week_schedule(row_week_schedule, parity))
 
 bot.run(config.API_TOKEN)
