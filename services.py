@@ -5,9 +5,8 @@ from pprint import pprint
 from discord import Embed, Color
 import requests
 
-from exceptions import ErrorFromServer
+from exceptions import ErrorFromServer, EmptyJsonError
 
-PARITIES = {'числитель', 'знаменатель'}
 
 START_WEEK = 1
 BASE_API_URL = 'http://127.0.0.1:8000/api/v1/'
@@ -39,32 +38,15 @@ def get_day_schedule(day: str, parity: str):
         'parity': parity,
     }
     response = requests.get(BASE_API_URL + 'schedule/day/', params=query)
+
+    r_json = response.json()
     if response.status_code == 200:
-        return sorted(response.json(), key=lambda obj: obj['time'])
+        if len(r_json) > 0:
+            return r_json
+        else:
+            raise EmptyJsonError
     else:
         raise ErrorFromServer(f"Status :{response.status_code}. Message: {response.text}")
-
-
-def make_beautiful_day_view(day_schedule_data) -> str:
-    """Приводит полученное расписание к красивому виду для отправки в виде сообщения"""
-    msg_bits = []
-    i = 1
-    for lesson in day_schedule_data:
-        teacher = lesson['teacher']
-        time = lesson["time"]
-        subject = lesson["subject"]
-        kind = lesson["kind"]["name"]
-        message_template = f'{i} ПАРА({kind}) - {subject["name"]}\n' \
-                           f'ВРЕМЯ - {time}\n' \
-                           f'Препод - {teacher["second_name"]}, {teacher["first_name"]}, {teacher["middle_name"]}'
-
-        msg_bits.append(message_template)
-        i += 1
-
-    day = day_schedule_data[0]["day"]["name"]
-    parity = day_schedule_data[0]["parity"]
-    msg_start = f'Расписание на {day} ({parity})\n'
-    return msg_start + '\n'.join(msg_bits)
 
 
 def make_embed_day_schedule(day_schedule_data, parity) -> Embed:
@@ -75,6 +57,7 @@ def make_embed_day_schedule(day_schedule_data, parity) -> Embed:
         "title": f"Расписание на {day} ({parity})",
         "fields": [],
         "thumbnail": {"url": random.choice(ANIME_PICS_LIST)},
+        "description": "Сюда можно будет что-нибудь написать",
     }
     lesson_num = 1
     for lesson in day_schedule_data:
@@ -82,14 +65,10 @@ def make_embed_day_schedule(day_schedule_data, parity) -> Embed:
         time = lesson["time"]
         subject = lesson["subject"]
         kind = lesson["kind"]["name"]
-        teacher_info_field = {
-            "name": ""
-        }
-        subject_field = {
-            "name": f"{lesson_num} пара ({kind}) - {time}",
-            "value": f"{subject['name']}"
-        }
+        teacher_info_field = create_teacher_info_field(teacher)
+        subject_field = create_field_template(f"{lesson_num} пара ({kind}) - {time}", f"{subject['name']}")
         embed_dict["fields"].append(subject_field)
+        embed_dict["fields"].extend(teacher_info_field)
         lesson_num += 1
     return Embed().from_dict(embed_dict)
 
@@ -102,22 +81,42 @@ def get_week_schedule(parity: str):
         'parity': parity,
     }
     response = requests.get(BASE_API_URL + 'schedule/', params=query)
+    r_json = response.json()
     if response.status_code == 200:
-        return response.json()
+        if len(r_json) > 0:
+            return r_json
+        else:
+            raise EmptyJsonError
     else:
         raise ErrorFromServer(f"Status: {response.status_code}. Message: {response.text}")
 
 
-def test_embed_features():
-    dct = {
-        "title": "Тестовый заголовок",
-        "color": Color.dark_gold().value,
-        "fields": [
-            {"name": "11111", "value": "kekwait", "inline": True},
-            {"name": "222222222", "value": "dsfdsfsdf", "inline": False},
-            {"name": "33333", "value": "sadf23g2d", "inline": True},
-            {"name": "444444", "value": "sadf23g2d", "inline": True},
-        ]
+def get_teacher_name(teacher, initials=False) -> str:
+    """Возвращает полное имя преподавателя"""
+    s_name = teacher["second_name"]
+    f_name = teacher["first_name"]
+    m_name = teacher["middle_name"]
+    if not initials:
+        return f"{s_name}, {f_name} {m_name}"
+    else:
+        return f"{s_name}, {f_name[0]}. {m_name[0]}."
+
+
+def create_teacher_info_field(teacher) -> list[dict]:
+    """Возвращает массив из полей с инфо о преподе для Embed"""
+    name = create_field_template(name="Препод", inline=True,
+                                 value=get_teacher_name(teacher))
+    contact = create_field_template(name="Номер телефона", inline=True,
+                                    value=f"{teacher['phone_number'] if teacher['phone_number'] else '-'}",)
+    kstu_link = create_field_template(name="Подробнее", inline=True,
+                                      value=f"{teacher['kstu_link'] if teacher['kstu_link'] else '-'}")
+    return [name, contact, kstu_link]
+
+
+def create_field_template(name: str, value: str, inline=False) -> dict:
+    """Шаблон для создания одного field для Embed"""
+    return {
+        "name": name,
+        "value": value,
+        "inline": inline,
     }
-    embed_obj = Embed().from_dict(dct)
-    return embed_obj
