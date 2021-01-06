@@ -26,7 +26,7 @@ async def process_day_schedule_command(ctx: Context, day: str, parity=None):
     if parity is None:
         parity = get_week_parity()
     try:
-        raw_day_schedule = get_day_schedule(day, parity)
+        raw_day_schedule = await get_day_schedule(day, parity)
     except ErrorFromServer as e:
         await ctx.send(str(e))
         return
@@ -42,7 +42,7 @@ async def process_week_schedule_command(ctx: Context, parity=None):
     if parity is None:
         parity = get_week_parity()
     try:
-        raw_week_schedule = get_week_schedule(parity)
+        raw_week_schedule = await get_week_schedule(parity)
     except ErrorFromServer as e:
         await ctx.send(str(e))
         return
@@ -60,7 +60,7 @@ async def process_test_command(ctx: Context):
 async def process_teacher_command(ctx: Context, arg=None):
     """Обрабатывает команду 'препод'"""
     try:
-        raw_teachers_info = get_teacher_list(arg)
+        raw_teachers_info = await get_teacher_list(arg)
     except ErrorFromServer as e:
         await ctx.send(str(e))
         return

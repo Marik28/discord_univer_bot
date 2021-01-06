@@ -1,12 +1,13 @@
-import requests
-from requests import Response
+import aiohttp
+from aiohttp import ClientResponse
 
 from exceptions import EmptyJson, ErrorFromServer
+
 
 BASE_API_URL = 'http://127.0.0.1:8000/api/v1/'
 
 
-def get_day_schedule(day: str, parity: str):
+async def get_day_schedule(day: str, parity: str):
     """Делает запрос к серверу и получает расписание на день,
     предварительно обработав JSON и приведя его к питонячьему виду.
     Расписание отсортировано по времени проведения пары."""
@@ -16,36 +17,37 @@ def get_day_schedule(day: str, parity: str):
         'day_name': day,
         'parity': parity,
     }
-    response = requests.get(BASE_API_URL + 'schedule/day/', params=query)
+    async with aiohttp.ClientSession() as session:
+        async with session.get(BASE_API_URL + 'schedule/day/', params=query) as response:
+            if response.status == 200:
+                r_json = await response.json()
+                if len(r_json) > 0:
+                    return r_json
+                else:
+                    raise EmptyJson
+            else:
+                msg = get_error_msg_template(response)
+                raise ErrorFromServer(msg)
 
-    r_json = response.json()
-    if successful_request(response):
-        if len(r_json) > 0:
-            return r_json
-        else:
-            raise EmptyJson
-    else:
-        msg = get_error_msg_template(response)
-        raise ErrorFromServer(msg)
 
-
-def get_week_schedule(parity: str):
+async def get_week_schedule(parity: str):
     """Делает запрос к серверу и получает расписание на неделю,
     предварительно обработав JSON и приведя его к питонячьему виду."""
     parity = parity.lower().strip()
     query = {
         'parity': parity,
     }
-    response = requests.get(BASE_API_URL + 'schedule/', params=query)
-    r_json = response.json()
-    if successful_request(response):
-        return r_json
-    else:
-        msg = get_error_msg_template(response)
-        raise ErrorFromServer(msg)
+    async with aiohttp.ClientSession() as session:
+        async with session.get(BASE_API_URL + 'schedule/', params=query) as response:
+            if response.status == 200:
+                r_json = await response.json()
+                return r_json
+            else:
+                msg = get_error_msg_template(response)
+                raise ErrorFromServer(msg)
 
 
-def get_teacher_list(arg):
+async def get_teacher_list(arg):
     """Делает запрос к серверу и получает список преподов,
     предварительно обработав JSON и приведя его к питонячьему виду."""
     if arg is None:
@@ -53,17 +55,15 @@ def get_teacher_list(arg):
     query = {
         "q": arg,
     }
-    response = requests.get(BASE_API_URL + 'teachers/filter/', params=query)
-    if successful_request(response):
-        return response.json()
-    else:
-        msg = get_error_msg_template(response)
-        raise ErrorFromServer(msg)
+    async with aiohttp.ClientSession() as session:
+        async with session.get(BASE_API_URL + 'teachers/filter/', params=query) as response:
+            if response.status == 200:
+                r_json = await response.json()
+                return r_json
+            else:
+                msg = get_error_msg_template(response)
+                raise ErrorFromServer(msg)
 
 
-def successful_request(response: Response) -> bool:
-    return response.status_code == 200
-
-
-def get_error_msg_template(response: Response) -> str:
-    return f"Status: {response.status_code}. Message: {response.text}"
+def get_error_msg_template(response: ClientResponse) -> str:
+    return f"Сервер вернул ошибку {response.status}"
