@@ -2,5 +2,5 @@ class ErrorFromServer(Exception):
     pass
 
 
-class EmptyJsonError(Exception):
+class EmptyJson(Exception):
     pass

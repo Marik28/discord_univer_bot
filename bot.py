@@ -1,12 +1,11 @@
-from pprint import pprint
-
 from discord.ext import commands
 from discord.ext.commands import Context
 
 import config
-from exceptions import ErrorFromServer, EmptyJsonError
-from services import get_week_parity, get_day_schedule, get_week_schedule, make_embed_day_schedule, \
-    make_embed_week_schedule, COMMAND_PREFIX, make_help_embed_message
+from api_helpers import get_teacher_list, get_day_schedule, get_week_schedule
+from exceptions import ErrorFromServer, EmptyJson
+from services import get_week_parity, make_embed_day_schedule, make_embed_week_schedule, COMMAND_PREFIX, \
+    make_help_embed_message, make_embed_teacher_list
 
 bot = commands.Bot(command_prefix=COMMAND_PREFIX)
 
@@ -31,7 +30,7 @@ async def process_day_schedule_command(ctx: Context, day: str, parity=None):
     except ErrorFromServer as e:
         await ctx.send(str(e))
         return
-    except EmptyJsonError:
+    except EmptyJson:
         await ctx.send(f"В этот день ({day}|{parity}) нет пар")
     else:
         await ctx.send(embed=make_embed_day_schedule(raw_day_schedule, parity))
@@ -53,8 +52,21 @@ async def process_week_schedule_command(ctx: Context, parity=None):
 
 @bot.command(name='info')
 async def process_test_command(ctx: Context):
-    """Обрабатывает команду info. Отправляет Embed со списком команд и примерами их использования"""
+    """Обрабатывает команду 'info'. Отправляет Embed со списком команд и примерами их использования"""
     await ctx.send(embed=make_help_embed_message())
 
 
-bot.run(config.API_TOKEN)
+@bot.command(aliases=['препод', 'преподы'])
+async def process_teacher_command(ctx: Context, arg=None):
+    """Обрабатывает команду 'препод'"""
+    try:
+        raw_teachers_info = get_teacher_list(arg)
+    except ErrorFromServer as e:
+        await ctx.send(str(e))
+        return
+    else:
+        await ctx.send(embed=make_embed_teacher_list(raw_teachers_info))
+
+
+if __name__ == '__main__':
+    bot.run(config.API_TOKEN)

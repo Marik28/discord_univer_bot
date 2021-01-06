@@ -1,50 +1,9 @@
 import datetime as dt
 import random
-from pprint import pprint
 
 from discord import Embed, Color
-import requests
 
-from exceptions import ErrorFromServer, EmptyJsonError
-
-COMMAND_PREFIX = '!'
-START_WEEK = 4
-BASE_API_URL = 'http://127.0.0.1:8000/api/v1/'
-
-ANIME_PICS_LIST = (
-    'https://cdn.myanimelist.net/r/360x360/images/characters/15/384405.jpg?s=a1512f99fe479ad49a1bf1bc8642c00a',
-    'https://i.ytimg.com/vi/EXtUR2NhBtg/maxresdefault.jpg',
-    'https://i.pinimg.com/originals/75/50/19/75501922405ca964a256af6877ce8710.jpg',
-    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQ5OLJXtkPTjEH4nzpfkipbZBackY1gmyl6Q&usqp=CAU',
-    'https://cdnb.artstation.com/p/assets/images/images/028/047/445/large/aurora-verdone-kasumi.jpg?1593348832',
-)
-
-ENDINGS = {
-    "понедельник": "понедельник",
-    "вторник": "вторник",
-    "среда": "среду",
-    "четверг": "четверг",
-    "пятница": "пятницу",
-    "суббота": "субботу",
-    "воскресенье": "воскресенье",
-}
-
-WEEK_DAYS = (
-    "понедельник",
-    "вторник",
-    "среда",
-    "четверг",
-    "пятница",
-    "суббота",
-    "воскресенье"
-)
-
-COMMANDS_DESCRIPTION = (
-    (f"{COMMAND_PREFIX}расписание [день] <числитель/знаменатель>",
-     "Узнать расписание на 1 день. Если четность недели не указана, будет выбран день текущей недели"),
-    (f"{COMMAND_PREFIX}неделя <числитель/знаменатель>",
-     "Узнать расписание на неделю. Если не указана четность недели, будет выбрана текущая неделя"),
-)
+from init import COMMANDS_DESCRIPTION, COMMAND_PREFIX, ANIME_PICS_LIST, WEEK_DAYS, ENDINGS
 
 
 def make_help_embed_message() -> Embed:
@@ -83,28 +42,6 @@ def get_week_parity() -> str:
         return 'знаменатель'
 
 
-def get_day_schedule(day: str, parity: str):
-    """Делает запрос к серверу и получает расписание на день,
-    предварительно обработав JSON и приведя его к питонячьему виду.
-    Расписание отсортировано по времени проведения пары."""
-    day = day.lower().strip()
-    parity = parity.lower().strip()
-    query = {
-        'day_name': day,
-        'parity': parity,
-    }
-    response = requests.get(BASE_API_URL + 'schedule/day/', params=query)
-
-    r_json = response.json()
-    if response.status_code == 200:
-        if len(r_json) > 0:
-            return r_json
-        else:
-            raise EmptyJsonError
-    else:
-        raise ErrorFromServer(f"Status :{response.status_code}. Message: {response.text}")
-
-
 def make_embed_day_schedule(day_schedule_data: list, parity) -> Embed:
     """Создает Embed на основе данных о расписании на 1 день"""
     day = change_ending(day_schedule_data[0]["day"]["name"])
@@ -123,24 +60,6 @@ def make_embed_day_schedule(day_schedule_data: list, parity) -> Embed:
         embed_dict["fields"].extend(teacher_info_field)
         lesson_num += 1
     return Embed().from_dict(embed_dict)
-
-
-def get_week_schedule(parity: str):
-    """Делает запрос к серверу и получает расписание на неделю,
-    предварительно обработав JSON и приведя его к питонячьему виду."""
-    parity = parity.lower().strip()
-    query = {
-        'parity': parity,
-    }
-    response = requests.get(BASE_API_URL + 'schedule/', params=query)
-    r_json = response.json()
-    if response.status_code == 200:
-        if len(r_json) > 0:
-            return r_json
-        else:
-            raise EmptyJsonError
-    else:
-        raise ErrorFromServer(f"Status: {response.status_code}. Message: {response.text}")
 
 
 def change_ending(day: str) -> str:
@@ -208,3 +127,22 @@ def add_day_info(lessons: list, embed_dict: dict, day: str) -> None:
 def create_teacher_brief_info(teacher):
     full_name = get_teacher_name(teacher, initials=True)
     return create_field_template(name="Препод", value=full_name, inline=True)
+
+
+def make_embed_teacher_list(teacher_list) -> Embed:
+    embed_dict = create_embed_template("Список преподавателей", "да-да")
+    for teacher in teacher_list:
+        fields = make_detail_teacher_fields(teacher)
+        embed_dict["fields"].extend(fields)
+    return Embed.from_dict(embed_dict)
+
+
+def make_detail_teacher_fields(teacher) -> list:
+    name = get_teacher_name(teacher)
+    email = teacher["email"]
+    phone = teacher["phone_number"]
+    department = teacher["department"]["name"] if teacher["department"] else None
+    position = teacher["position"]
+    link = teacher["kstu_link"]
+    first_field = create_field_template(f"{name} ({department})", f"({position}). Номер - {phone}, email - {email}." )
+    return [first_field]
