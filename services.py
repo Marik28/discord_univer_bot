@@ -7,6 +7,7 @@ import requests
 
 from exceptions import ErrorFromServer, EmptyJsonError
 
+COMMAND_PREFIX = '!'
 START_WEEK = 4
 BASE_API_URL = 'http://127.0.0.1:8000/api/v1/'
 
@@ -37,6 +38,40 @@ WEEK_DAYS = (
     "суббота",
     "воскресенье"
 )
+
+COMMANDS_DESCRIPTION = (
+    (f"{COMMAND_PREFIX}расписание [день] <числитель/знаменатель>",
+     "Узнать расписание на 1 день. Если четность недели не указана, будет выбран день текущей недели"),
+    (f"{COMMAND_PREFIX}неделя <числитель/знаменатель>",
+     "Узнать расписание на неделю. Если не указана четность недели, будет выбрана текущая неделя"),
+)
+
+
+def make_help_embed_message() -> Embed:
+    """Оформляет набор всех комманд в виде Embed"""
+
+    embed_dict = create_embed_template(title="Список всех команд", description="Сюда можно будет что-нибудь написать",
+                                       color=Color.blue().value)
+    for command in COMMANDS_DESCRIPTION:
+        embed_dict["fields"].append(create_field_template(command[0], command[1]))
+    return Embed().from_dict(embed_dict)
+
+
+def create_embed_template(title, description, color=None, allow_anime_thumbnail=True, ) -> dict:
+    """Создает шаблон для Embed"""
+    embed_dict = {
+        "title": title,
+        "fields": [],
+        "description": description,
+        "footer": {
+            "text": f"Напиши {COMMAND_PREFIX}info, чтобы узнать список команд",
+        },
+    }
+    if color is not None:
+        embed_dict["color"] = color
+    if allow_anime_thumbnail:
+        embed_dict["thumbnail"] = {"url": random.choice(ANIME_PICS_LIST)}
+    return embed_dict
 
 
 def get_week_parity() -> str:
@@ -73,13 +108,9 @@ def get_day_schedule(day: str, parity: str):
 def make_embed_day_schedule(day_schedule_data: list, parity) -> Embed:
     """Создает Embed на основе данных о расписании на 1 день"""
     day = change_ending(day_schedule_data[0]["day"]["name"])
-    embed_dict = {
-        "color": Color.blue().value,
-        "title": f"Расписание на {day} ({parity})",
-        "fields": [],
-        "thumbnail": {"url": random.choice(ANIME_PICS_LIST)},
-        "description": "Сюда можно будет что-нибудь написать",
-    }
+    embed_dict = create_embed_template(title=f"Расписание на {day} ({parity})",
+                                       description="Сюда можно будет что-нибудь написать",
+                                       color=Color.blue().value)
     lesson_num = 1
     for lesson in day_schedule_data:
         teacher = lesson['teacher']
@@ -149,13 +180,9 @@ def create_field_template(name: str, value: str, inline=False) -> dict:
 
 def make_embed_week_schedule(week_schedule: list, parity: str) -> Embed:
     """Создает Embed на основе данных о расписании на неделю"""
-    embed_dict = {
-        "color": Color.blue().value,
-        "title": f"Расписание на неделю ({parity})",
-        "fields": [],
-        "thumbnail": {"url": random.choice(ANIME_PICS_LIST)},
-        "description": "Сюда можно будет что-нибудь написать",
-    }
+    embed_dict = create_embed_template(title=f"Расписание на неделю ({parity})",
+                                       description="Сюда можно будет что-нибудь написать",
+                                       color=Color.blue().value)
     for day in WEEK_DAYS:
         cur_lessons = [lesson for lesson in week_schedule if lesson["day"]["name"] == day]
         if len(cur_lessons) > 0:
