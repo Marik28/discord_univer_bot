@@ -144,5 +144,22 @@ def make_detail_teacher_fields(teacher) -> list:
     department = teacher["department"]["name"] if teacher["department"] else None
     position = teacher["position"]
     link = teacher["kstu_link"]
-    first_field = create_field_template(f"{name} ({department})", f"({position}). Номер - {phone}, email - {email}." )
-    return [first_field]
+    first_field = create_field_template(
+        f"{name} ({department})", f"({position}). Номер - {phone}, email - {email}. Подробнее - {link}"
+    )
+    second_field = create_field_template("Что ведет", f"{process_subjects(teacher)}")
+    return [first_field, second_field]
+
+
+def process_subjects(teacher) -> str:
+    practic_set = teacher["practic_set"]
+    lecture_set = teacher["lecture_set"]
+    lab_set = teacher["lab_set"]
+    tmp_list = [(practic_set, "Семинары"), (lecture_set, "Лекции"), (lab_set, "Лабы")]
+    return '; '.join([create_subj_set_template(*item)for item in tmp_list])
+
+
+def create_subj_set_template(subj_set, subj_type) -> str:
+    if subj_set is None:
+        return '-'
+    return f"{subj_type}: {', '.join(subj['name'] for subj in subj_set)} \t"
