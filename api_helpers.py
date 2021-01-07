@@ -1,10 +1,21 @@
 import aiohttp
 from aiohttp import ClientResponse
 
-from exceptions import EmptyJson, ErrorFromServer
-
+from exceptions import ErrorFromServer
 
 BASE_API_URL = 'http://127.0.0.1:8000/api/v1/'
+
+
+async def handle_request(endpoint: str, query=None):
+    """Корутина, делающая запрос на переданный endpoint"""
+    async with aiohttp.ClientSession() as session:
+        async with session.get(BASE_API_URL + endpoint, params=query) as response:
+            if response.status == 200:
+                r_json = await response.json()
+                return r_json
+            else:
+                msg = get_error_msg_template(response)
+                raise ErrorFromServer(msg)
 
 
 async def get_day_schedule(day: str, parity: str):
@@ -17,17 +28,8 @@ async def get_day_schedule(day: str, parity: str):
         'day_name': day,
         'parity': parity,
     }
-    async with aiohttp.ClientSession() as session:
-        async with session.get(BASE_API_URL + 'schedule/day/', params=query) as response:
-            if response.status == 200:
-                r_json = await response.json()
-                if len(r_json) > 0:
-                    return r_json
-                else:
-                    raise EmptyJson
-            else:
-                msg = get_error_msg_template(response)
-                raise ErrorFromServer(msg)
+    r_json = await handle_request('schedule/day/', query=query)
+    return r_json
 
 
 async def get_week_schedule(parity: str):
@@ -37,32 +39,27 @@ async def get_week_schedule(parity: str):
     query = {
         'parity': parity,
     }
-    async with aiohttp.ClientSession() as session:
-        async with session.get(BASE_API_URL + 'schedule/', params=query) as response:
-            if response.status == 200:
-                r_json = await response.json()
-                return r_json
-            else:
-                msg = get_error_msg_template(response)
-                raise ErrorFromServer(msg)
+    r_json = await handle_request("schedule/", query)
+    return r_json
 
 
 async def get_teacher_list(arg):
-    """Делает запрос к серверу и получает список преподов,
+    """Делает запрос к серверу и получает список преподов на основе переданного аргумента,
     предварительно обработав JSON и приведя его к питонячьему виду."""
-    if arg is None:
-        arg = ''
     query = {
         "q": arg,
     }
-    async with aiohttp.ClientSession() as session:
-        async with session.get(BASE_API_URL + 'teachers/filter/', params=query) as response:
-            if response.status == 200:
-                r_json = await response.json()
-                return r_json
-            else:
-                msg = get_error_msg_template(response)
-                raise ErrorFromServer(msg)
+    r_json = await handle_request('teachers/filter/', query)
+    return r_json
+
+
+async def get_subject_list(arg):
+    """Делает запрос к серверу и получает отфильтрованный список предметов исходя из переданного аргумента"""
+    query = {
+        "q": arg,
+    }
+    r_json = await handle_request('subjects/filter/', query)
+    return r_json
 
 
 def get_error_msg_template(response: ClientResponse) -> str:
