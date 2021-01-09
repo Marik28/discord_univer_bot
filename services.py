@@ -1,7 +1,7 @@
 import datetime as dt
 import re
 
-from discord import Embed, Color
+from discord import Embed
 
 from embed_handlers import create_field_template, create_embed_template
 from exceptions import InvalidImageLink
@@ -11,8 +11,7 @@ from constants import COMMANDS_DESCRIPTION, WEEK_DAYS, ENDINGS, anime_pics_list
 def make_help_embed_message() -> Embed:
     """Оформляет набор всех комманд в виде Embed"""
 
-    embed_dict = create_embed_template(title="Список всех команд", description="Сюда можно будет что-нибудь написать",
-                                       color=Color.blue().value)
+    embed_dict = create_embed_template(title="Список всех команд", description="Сюда можно будет что-нибудь написать")
     for command in COMMANDS_DESCRIPTION:
         embed_dict["fields"].append(create_field_template(command[0], command[1]))
     return Embed().from_dict(embed_dict)
@@ -31,12 +30,11 @@ def make_embed_day_schedule(day_schedule_data: list, day, parity) -> Embed:
     """Создает Embed на основе данных о расписании на 1 день"""
     day = change_ending(day)
     title = f"Расписание на {day} ({parity})"
-    color = Color.blue().value
     if len(day_schedule_data) == 0:
         description = "Нет пар получается"
-        return Embed.from_dict(create_embed_template(title=title, description=description, color=color))
+        return Embed.from_dict(create_embed_template(title=title, description=description))
     description = "Придумаю что-нибудь"
-    embed_dict = create_embed_template(title=title, description=description, color=color)
+    embed_dict = create_embed_template(title=title, description=description)
     lesson_num = 1
     for lesson in day_schedule_data:
         teacher = lesson['teacher']
@@ -80,8 +78,7 @@ def create_teacher_info_fields(teacher) -> list[dict]:
 def make_embed_week_schedule(week_schedule: list, parity: str) -> Embed:
     """Создает Embed на основе данных о расписании на неделю"""
     embed_dict = create_embed_template(title=f"Расписание на неделю ({parity})",
-                                       description="Сюда можно будет что-нибудь написать",
-                                       color=Color.blue().value)
+                                       description="Сюда можно будет что-нибудь написать")
     for day in WEEK_DAYS:
         cur_lessons = [lesson for lesson in week_schedule if lesson["day"]["name"] == day]
         if len(cur_lessons) > 0:
@@ -165,9 +162,9 @@ def make_embed_subject_list(subjects_info: list, init_query: str) -> Embed:
 
 
 def process_teachers(subject):
-    lecturer = get_teacher_name(subject["lecturer"], initials=True)
-    lab_teacher = get_teacher_name(subject["lab_teacher"], initials=True)
-    practic_teacher = get_teacher_name(subject["practic_teacher"], initials=True)
+    lecturer = get_teacher_name(subject["lecturer"], initials=True) if subject["lecturer"] else None
+    lab_teacher = get_teacher_name(subject["lab_teacher"], initials=True) if subject["lab_teacher"] else None
+    practic_teacher = get_teacher_name(subject["practic_teacher"], initials=True) if subject["practic_teacher"] else None
     txt = f"Лектор: {lecturer}. Практику ведет: {practic_teacher}. Лабы ведет: {lab_teacher}"
     return create_field_template("Преподы", txt, inline=True)
 
