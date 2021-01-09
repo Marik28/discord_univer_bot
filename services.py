@@ -165,10 +165,10 @@ def make_embed_subject_list(subjects_info: list, init_query: str) -> Embed:
 
 
 def process_teachers(subject):
-    lecturer = subject["lecturer"]
-    lab_teacher = subject["lab_teacher"]
-    practic_teacher = subject["practic_teacher"]
-    txt = f"Лектор: {lecturer}. Практику ведет {practic_teacher}. Лабы ведет {lab_teacher}"
+    lecturer = get_teacher_name(subject["lecturer"], initials=True)
+    lab_teacher = get_teacher_name(subject["lab_teacher"], initials=True)
+    practic_teacher = get_teacher_name(subject["practic_teacher"], initials=True)
+    txt = f"Лектор: {lecturer}. Практику ведет: {practic_teacher}. Лабы ведет: {lab_teacher}"
     return create_field_template("Преподы", txt, inline=True)
 
 

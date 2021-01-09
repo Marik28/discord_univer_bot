@@ -85,8 +85,7 @@ async def process_subjects_command(ctx: Context, arg=None):
     """Производит поиск по предметам на совпадение части названия.
     Возвращает список совпадений в виде Embed-сообщения"""
     if arg is None:
-        msg = f"Небходимо написать хотя бы часть названия предмета. " \
-              f"Попробуй {COMMAND_PREFIX}info, чтобы узнать, как пользоваться командами"
+        msg = f"Небходимо написать хотя бы часть названия предмета. {ERROR_MSG_BIT}"
     else:
         try:
             raw_subjects_info = await get_subject_list(arg)
