@@ -7,14 +7,15 @@ BASE_API_URL = 'http://127.0.0.1:8000/api/v1/'
 
 
 async def handle_request(endpoint: str, query=None):
-    """Корутина, делающая запрос на переданный endpoint"""
+    """Корутина, делающая GET-запрос на переданный endpoint"""
     async with aiohttp.ClientSession() as session:
         async with session.get(BASE_API_URL + endpoint, params=query) as response:
             if response.status == 200:
                 r_json = await response.json()
                 return r_json
             else:
-                msg = get_error_msg_template(response)
+                r_text = await response.text()
+                msg = get_error_msg_template(response.status, r_text)
                 raise ErrorFromServer(msg)
 
 
@@ -62,5 +63,5 @@ async def get_subject_list(arg):
     return r_json
 
 
-def get_error_msg_template(response: ClientResponse) -> str:
-    return f"Сервер вернул ошибку {response.status}"
+def get_error_msg_template(r_status: int, r_text: str) -> str:
+    return f"Сервер вернул ошибку {r_status}: '{r_text}'"
