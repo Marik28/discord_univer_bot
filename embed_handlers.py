@@ -1,6 +1,6 @@
 import random
 
-from init import COMMAND_PREFIX, ANIME_PICS_LIST
+from constants import COMMAND_PREFIX, anime_pics_list
 
 
 def create_embed_template(title: str = "-", description: str = "-", color=None, allow_anime_thumbnail=True, ) -> dict:
@@ -18,7 +18,7 @@ def create_embed_template(title: str = "-", description: str = "-", color=None, 
     else:
         embed_dict["color"] = random.randint(0, 0xFFFFFF)
     if allow_anime_thumbnail:
-        embed_dict["thumbnail"] = {"url": random.choice(ANIME_PICS_LIST)}
+        embed_dict["thumbnail"] = {"url": random.choice(anime_pics_list)}
     return embed_dict
 
 
