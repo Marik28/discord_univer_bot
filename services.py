@@ -10,10 +10,9 @@ from constants import COMMANDS_DESCRIPTION, WEEK_DAYS, ENDINGS, anime_pics_list
 
 def make_help_embed_message() -> Embed:
     """Оформляет набор всех комманд в виде Embed"""
-
     embed_dict = create_embed_template(title="Список всех команд", description="Сюда можно будет что-нибудь написать")
-    for command in COMMANDS_DESCRIPTION:
-        embed_dict["fields"].append(create_field_template(command[0], command[1]))
+    for command, description in COMMANDS_DESCRIPTION.items():
+        embed_dict["fields"].append(create_field_template(command, description))
     return Embed().from_dict(embed_dict)
 
 

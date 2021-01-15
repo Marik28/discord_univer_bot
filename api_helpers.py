@@ -1,5 +1,5 @@
 import aiohttp
-from aiohttp import ClientResponse
+from aiohttp import ClientResponse, ClientConnectorError
 
 from exceptions import ErrorFromServer
 
@@ -9,14 +9,17 @@ BASE_API_URL = 'http://127.0.0.1:8000/api/v1/'
 async def handle_request(endpoint: str, query=None):
     """Корутина, делающая GET-запрос на переданный endpoint"""
     async with aiohttp.ClientSession() as session:
-        async with session.get(BASE_API_URL + endpoint, params=query) as response:
-            if response.status == 200:
-                r_json = await response.json()
-                return r_json
-            else:
-                r_text = await response.text()
-                msg = get_error_msg_template(response.status, r_text)
-                raise ErrorFromServer(msg)
+        try:
+            async with session.get(BASE_API_URL + endpoint, params=query) as response:
+                if response.status == 200:
+                    r_json = await response.json()
+                    return r_json
+                else:
+                    r_text = await response.text()
+                    msg = get_error_msg_template(response.status, r_text)
+                    raise ErrorFromServer(msg)
+        except ClientConnectorError as e:
+            raise ErrorFromServer(str(e))
 
 
 async def get_day_schedule(day: str, parity: str):
@@ -55,7 +58,8 @@ async def get_teacher_list(arg):
 
 
 async def get_subject_list(arg):
-    """Делает запрос к серверу и получает отфильтрованный список предметов исходя из переданного аргумента"""
+    """Делает запрос к серверу и получает отфильтрованный список предметов
+    исходя из переданного аргумента"""
     query = {
         "q": arg,
     }
