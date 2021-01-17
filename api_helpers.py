@@ -1,5 +1,5 @@
 import aiohttp
-from aiohttp import ClientResponse, ClientConnectorError
+from aiohttp import ClientConnectorError
 
 from exceptions import ErrorFromServer
 
@@ -7,7 +7,8 @@ BASE_API_URL = 'http://127.0.0.1:8000/api/v1/'
 
 
 async def handle_request(endpoint: str, query=None):
-    """Корутина, делающая GET-запрос на переданный endpoint"""
+    """Корутина, делающая GET-запрос на переданный endpoint. В случае успеха возвращает распаршенный (?) JSON ответа.
+    Если на сервере произошла ошибка, возвращает её текст."""
     async with aiohttp.ClientSession() as session:
         try:
             async with session.get(BASE_API_URL + endpoint, params=query) as response:

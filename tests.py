@@ -1,5 +1,3 @@
-def function(name):
-    print("Привет, ", name)
+from redis_api import init_redis
 
-
-function("Марк")
+init_redis()

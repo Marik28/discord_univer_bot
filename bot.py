@@ -22,8 +22,8 @@ async def hello(ctx: Context):
 
 
 @bot.command(aliases=['расписание', 'пары'])
-async def process_day_schedule_command(ctx: Context, day: str = None, parity=None):
-    """Узнает расписание на конкретный день недели. Если не указана четность недели, берется четность текущей недели
+async def process_day_schedule_command(ctx: Context, day: str = None, parity: str = None):
+    """Узнает расписание на конкретный день недели. Если не указана четность недели, берется четность текущей недели.
     Результат отправляет в виде Embed-сообщения"""
     if day is None:
         msg = f"Нужно указать хотя бы день недели, на который узнает расписание.{ERROR_MSG_BIT}"
@@ -34,8 +34,6 @@ async def process_day_schedule_command(ctx: Context, day: str = None, parity=Non
             raw_day_schedule = await get_day_schedule(day, parity)
         except ErrorFromServer as e:
             msg = str(e)
-        except ConnectionRefusedError:
-            msg = "Не удалось подключиться к серверу"
         else:
             await ctx.send(embed=make_embed_day_schedule(raw_day_schedule, day, parity))
             return
@@ -43,7 +41,7 @@ async def process_day_schedule_command(ctx: Context, day: str = None, parity=Non
 
 
 @bot.command(name='неделя')
-async def process_week_schedule_command(ctx: Context, parity=None):
+async def process_week_schedule_command(ctx: Context, parity: str = None):
     """Узнает расписание на целую неделю. Если не указана четность недели, берется четность текущей недели.
     Результат отправляет в виде Embed-сообщения"""
     if parity is None:

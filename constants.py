@@ -1,5 +1,8 @@
 anime_pics_list = []
 
+ANIME_LINKS_DB = 0
+
+
 COMMAND_PREFIX = '!'
 START_WEEK = 4
 
