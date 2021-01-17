@@ -52,7 +52,6 @@ async def process_week_schedule_command(ctx: Context, parity=None):
         raw_week_schedule = await get_week_schedule(parity)
     except ErrorFromServer as e:
         await ctx.send(str(e))
-        return
     else:
         await ctx.send(embed=make_embed_week_schedule(raw_week_schedule, parity))
 

@@ -92,7 +92,9 @@ def add_day_info(lessons: list, embed_dict: dict, day: str) -> None:
         time = lesson["time"]
         subject = lesson["subject"]
         kind = lesson["kind"]["name"]
-        teacher_brief_info_field = create_teacher_brief_info(teacher)
+        # это надо пофиксить
+        teacher_brief_info_field = create_teacher_brief_info(teacher) if teacher else create_field_template("Препод",
+                                                                                                            inline=True)
         day_info_field = create_field_template(day.capitalize() if lesson_num == 1 else "-",
                                                "-", inline=True)
         subject_field = create_field_template(f"{lesson_num} пара ({kind}) - {time}", f"{subject['name']}", inline=True)
