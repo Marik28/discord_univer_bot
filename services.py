@@ -1,11 +1,11 @@
-import datetime as dt
 import re
 
 from discord import Embed
 
+from datetime_helpers import change_ending, WEEK_DAYS
 from embed_handlers import create_field_template, create_embed_template
 from exceptions import InvalidImageLink
-from constants import COMMANDS_DESCRIPTION, WEEK_DAYS, ENDINGS, anime_pics_list
+from constants import COMMANDS_DESCRIPTION, anime_pics_list
 
 
 def make_help_embed_message() -> Embed:
@@ -14,15 +14,6 @@ def make_help_embed_message() -> Embed:
     for command, description in COMMANDS_DESCRIPTION.items():
         embed_dict["fields"].append(create_field_template(command, description))
     return Embed().from_dict(embed_dict)
-
-
-def get_week_parity() -> str:
-    """Возвращает четность недели в виде строки (числитель/знаменатель)"""
-    cur_week = int(dt.date.today().strftime('%W'))
-    if cur_week % 2 == 0:
-        return 'числитель'
-    else:
-        return 'знаменатель'
 
 
 def make_embed_day_schedule(day_schedule_data: list, day, parity) -> Embed:
@@ -46,10 +37,6 @@ def make_embed_day_schedule(day_schedule_data: list, day, parity) -> Embed:
         embed_dict["fields"].extend(teacher_info_field)
         lesson_num += 1
     return Embed().from_dict(embed_dict)
-
-
-def change_ending(day: str) -> str:
-    return ENDINGS[day]
 
 
 def get_teacher_name(teacher, initials=False) -> str:
@@ -165,7 +152,8 @@ def make_embed_subject_list(subjects_info: list, init_query: str) -> Embed:
 def process_teachers(subject):
     lecturer = get_teacher_name(subject["lecturer"], initials=True) if subject["lecturer"] else None
     lab_teacher = get_teacher_name(subject["lab_teacher"], initials=True) if subject["lab_teacher"] else None
-    practic_teacher = get_teacher_name(subject["practic_teacher"], initials=True) if subject["practic_teacher"] else None
+    practic_teacher = get_teacher_name(subject["practic_teacher"], initials=True) if subject[
+        "practic_teacher"] else None
     txt = f"Лектор: {lecturer}. Практику ведет: {practic_teacher}. Лабы ведет: {lab_teacher}"
     return create_field_template("Преподы", txt, inline=True)
 

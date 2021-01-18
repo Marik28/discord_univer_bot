@@ -3,9 +3,10 @@ from discord.ext.commands import Context
 
 import config
 from api_helpers import get_teacher_list, get_day_schedule, get_week_schedule, get_subject_list
+from datetime_helpers import from_word_to_day, DAY_SPECIAL_WORDS, get_week_parity
 from exceptions import ErrorFromServer, InvalidImageLink
 from constants import COMMAND_PREFIX, anime_pics_list, ERROR_MSG_BIT
-from services import get_week_parity, make_embed_day_schedule, make_embed_week_schedule, make_help_embed_message, \
+from services import make_embed_day_schedule, make_embed_week_schedule, make_help_embed_message, \
     make_embed_teacher_list, make_embed_subject_list, init_anime_links_list, add_link_to_list_and_file
 
 bot = commands.Bot(command_prefix=COMMAND_PREFIX)
@@ -28,6 +29,8 @@ async def process_day_schedule_command(ctx: Context, day: str = None, parity: st
     if day is None:
         msg = f"Нужно указать хотя бы день недели, на который узнает расписание.{ERROR_MSG_BIT}"
     else:
+        if day in DAY_SPECIAL_WORDS:
+            day = from_word_to_day[day]()
         if parity is None:
             parity = get_week_parity()
         try:
