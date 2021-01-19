@@ -65,8 +65,8 @@ async def process_test_command(ctx: Context):
     await ctx.send(embed=make_help_embed_message())
 
 
-@bot.command(aliases=['препод', 'преподы'])
-# @command_call_logger_decorator
+@bot.command(aliases=['препод', 'преподы', 'преподаватель', 'преподаватели'])
+@command_call_logger_decorator
 async def process_teacher_command(ctx: Context, arg=None):
     """Производит поиск по преподам на совпадение Ф./И./О. препода.
     Возвращает список совпадений в виде Embed-сообщения"""
@@ -84,7 +84,7 @@ async def process_teacher_command(ctx: Context, arg=None):
 
 
 @bot.command(aliases=['предмет', 'предметы'])
-# @command_call_logger_decorator
+@command_call_logger_decorator
 async def process_subjects_command(ctx: Context, arg=None):
     """Производит поиск по предметам на совпадение части названия.
     Возвращает список совпадений в виде Embed-сообщения"""
@@ -102,7 +102,7 @@ async def process_subjects_command(ctx: Context, arg=None):
 
 
 @bot.command(aliases=["добавить", "addlink"])
-# @command_call_logger_decorator
+@command_call_logger_decorator
 async def process_add_link_command(ctx: Context, link=None):
     """Добавляет ссылку на картинку в список ссылок и в файл с ссылаками"""
     if link is None:
