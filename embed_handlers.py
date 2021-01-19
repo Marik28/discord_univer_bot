@@ -2,7 +2,6 @@ import random
 
 from constants import COMMAND_PREFIX, anime_pics_list
 # from bot import connection
-from redis_api import ANIME_LINKS_LIST
 
 
 def create_embed_template(title: str = "-", description: str = "-", color=None, allow_anime_thumbnail=True, ) -> dict:

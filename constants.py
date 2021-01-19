@@ -1,6 +1,13 @@
+from pathlib import Path
+
+
 anime_pics_list = []
 
 ANIME_LINKS_DB = 0
+
+BASE_DIR = Path.cwd()
+ANIME_LINKS_FILE = BASE_DIR / "anime_pics_links.txt"
+
 
 COMMAND_PREFIX = '!'
 

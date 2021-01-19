@@ -2,12 +2,10 @@ import re
 
 from discord import Embed
 
-# from bot import connection
 from constants import COMMANDS_DESCRIPTION, anime_pics_list
 from datetime_helpers import change_ending, WEEK_DAYS
 from embed_handlers import create_field_template, create_embed_template
 from exceptions import InvalidImageLink
-from redis_api import ANIME_LINKS_LIST
 
 
 def make_help_embed_message() -> Embed:
@@ -179,18 +177,6 @@ def add_link_to_list_and_file(link: str) -> None:
                 file.write(f"\n{link}")
 
 
-# def add_link_to_redis_and_file(link: str) -> None:
-#     if not is_valid_image_link(link):
-#         raise InvalidImageLink("Ссылка не является правильной :( (по крайней мере она не прошла нашу проверку)")
-#     else:
-#         if connection.sismember(ANIME_LINKS_LIST):
-#             pass
-#         else:
-#             connection.sadd(ANIME_LINKS_LIST)
-#             with open("anime_pics_links.txt", "a", encoding="utf-8") as file:
-#                 file.write(f"\n{link}")
-
-
 def is_valid_image_link(link: str) -> bool:
     link_pattern = re.compile(r"^(?P<protocol>http|https)://"
                               r"(?P<domain_and_path>[\w/.-]+)"
@@ -200,3 +186,4 @@ def is_valid_image_link(link: str) -> bool:
         return False
     else:
         return True
+

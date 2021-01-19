@@ -3,13 +3,13 @@ from discord.ext.commands import Context
 
 from api_helpers import get_teacher_list, get_day_schedule, get_week_schedule, get_subject_list
 import config
-from constants import COMMAND_PREFIX, anime_pics_list, ERROR_MSG_BIT
+from constants import COMMAND_PREFIX, ERROR_MSG_BIT
 from datetime_helpers import from_word_to_day, DAY_SPECIAL_WORDS, get_week_parity
 from exceptions import ErrorFromServer, InvalidImageLink
 from logging_utils import logger, command_call_logger_decorator
-from redis_api import init_redis
+from redis_utils.redis_api import add_link_to_redis
 from services import make_embed_day_schedule, make_embed_week_schedule, make_help_embed_message, \
-    make_embed_teacher_list, make_embed_subject_list, init_anime_links_list, add_link_to_list_and_file
+    make_embed_teacher_list, make_embed_subject_list
 
 bot = commands.Bot(command_prefix=COMMAND_PREFIX)
 
@@ -109,7 +109,7 @@ async def process_add_link_command(ctx: Context, link=None):
         msg = "Необходимо отправить ссылку на картинку"
     else:
         try:
-            add_link_to_list_and_file(link)
+            add_link_to_redis(link)
         except InvalidImageLink as e:
             msg = str(e)
         else:
@@ -118,7 +118,10 @@ async def process_add_link_command(ctx: Context, link=None):
 
 
 if __name__ == '__main__':
-    # connection = init_redis("anime_pics_links.txt")
-    init_anime_links_list("anime_pics_links.txt", anime_pics_list)
+    # не знаю, как нормально проинициализировать редис
+    # init_anime_links_list("anime_pics_links.txt", anime_pics_list)
     logger.info("Начинаю подключение к серверу ...")
-    bot.run(config.API_TOKEN)
+    try:
+        bot.run(config.API_TOKEN)
+    except Exception as e:
+        logger.error(f"Произошла ошибка {e}. Бот завершил работу")
