@@ -1,6 +1,8 @@
 import random
 
 from constants import COMMAND_PREFIX, anime_pics_list
+# from bot import connection
+from redis_api import ANIME_LINKS_LIST
 
 
 def create_embed_template(title: str = "-", description: str = "-", color=None, allow_anime_thumbnail=True, ) -> dict:
@@ -19,6 +21,7 @@ def create_embed_template(title: str = "-", description: str = "-", color=None, 
         embed_dict["color"] = random.randint(0, 0xFFFFFF)
     if allow_anime_thumbnail:
         embed_dict["thumbnail"] = {"url": random.choice(anime_pics_list)}
+        # embed_dict["thumbnail"] = {"url": connection.srandmember(ANIME_LINKS_LIST).decode()}
     return embed_dict
 
 

@@ -1,11 +1,13 @@
 from discord.ext import commands
 from discord.ext.commands import Context
 
-import config
 from api_helpers import get_teacher_list, get_day_schedule, get_week_schedule, get_subject_list
+import config
+from constants import COMMAND_PREFIX, anime_pics_list, ERROR_MSG_BIT
 from datetime_helpers import from_word_to_day, DAY_SPECIAL_WORDS, get_week_parity
 from exceptions import ErrorFromServer, InvalidImageLink
-from constants import COMMAND_PREFIX, anime_pics_list, ERROR_MSG_BIT
+from logging_utils import logger, command_call_logger_decorator
+from redis_api import init_redis
 from services import make_embed_day_schedule, make_embed_week_schedule, make_help_embed_message, \
     make_embed_teacher_list, make_embed_subject_list, init_anime_links_list, add_link_to_list_and_file
 
@@ -14,18 +16,16 @@ bot = commands.Bot(command_prefix=COMMAND_PREFIX)
 
 @bot.event
 async def on_ready():
-    print('Бот подключился к серверу')
-
-
-@bot.command(name='hello')
-async def hello(ctx: Context):
-    await ctx.send('Дарова, чел')
+    logger.info("Бот подключился к серверу")
 
 
 @bot.command(aliases=['расписание', 'пары'])
+@command_call_logger_decorator
 async def process_day_schedule_command(ctx: Context, day: str = None, parity: str = None):
     """Узнает расписание на конкретный день недели. Если не указана четность недели, берется четность текущей недели.
     Результат отправляет в виде Embed-сообщения"""
+    # logger.info(f"Получено сообщение '{ctx.message.content}' с аргументами '{day}', '{parity}' "
+    #             f"(Сервер - {ctx.guild}, канал - {ctx.channel}) ")
     if day is None:
         msg = f"Нужно указать хотя бы день недели, на который узнает расписание.{ERROR_MSG_BIT}"
     else:
@@ -44,6 +44,7 @@ async def process_day_schedule_command(ctx: Context, day: str = None, parity: st
 
 
 @bot.command(name='неделя')
+@command_call_logger_decorator
 async def process_week_schedule_command(ctx: Context, parity: str = None):
     """Узнает расписание на целую неделю. Если не указана четность недели, берется четность текущей недели.
     Результат отправляет в виде Embed-сообщения"""
@@ -58,12 +59,14 @@ async def process_week_schedule_command(ctx: Context, parity: str = None):
 
 
 @bot.command(name='info')
+@command_call_logger_decorator
 async def process_test_command(ctx: Context):
     """Отправляет Embed-сообщение со списком команд и их описанием"""
     await ctx.send(embed=make_help_embed_message())
 
 
 @bot.command(aliases=['препод', 'преподы'])
+# @command_call_logger_decorator
 async def process_teacher_command(ctx: Context, arg=None):
     """Производит поиск по преподам на совпадение Ф./И./О. препода.
     Возвращает список совпадений в виде Embed-сообщения"""
@@ -81,6 +84,7 @@ async def process_teacher_command(ctx: Context, arg=None):
 
 
 @bot.command(aliases=['предмет', 'предметы'])
+# @command_call_logger_decorator
 async def process_subjects_command(ctx: Context, arg=None):
     """Производит поиск по предметам на совпадение части названия.
     Возвращает список совпадений в виде Embed-сообщения"""
@@ -98,6 +102,7 @@ async def process_subjects_command(ctx: Context, arg=None):
 
 
 @bot.command(aliases=["добавить", "addlink"])
+# @command_call_logger_decorator
 async def process_add_link_command(ctx: Context, link=None):
     """Добавляет ссылку на картинку в список ссылок и в файл с ссылаками"""
     if link is None:
@@ -113,5 +118,7 @@ async def process_add_link_command(ctx: Context, link=None):
 
 
 if __name__ == '__main__':
+    # connection = init_redis("anime_pics_links.txt")
     init_anime_links_list("anime_pics_links.txt", anime_pics_list)
+    logger.info("Начинаю подключение к серверу ...")
     bot.run(config.API_TOKEN)
