@@ -24,8 +24,6 @@ async def on_ready():
 async def process_day_schedule_command(ctx: Context, day: str = None, parity: str = None):
     """Узнает расписание на конкретный день недели. Если не указана четность недели, берется четность текущей недели.
     Результат отправляет в виде Embed-сообщения"""
-    # logger.info(f"Получено сообщение '{ctx.message.content}' с аргументами '{day}', '{parity}' "
-    #             f"(Сервер - {ctx.guild}, канал - {ctx.channel}) ")
     if day is None:
         msg = f"Нужно указать хотя бы день недели, на который узнает расписание.{ERROR_MSG_BIT}"
     else:
@@ -118,8 +116,6 @@ async def process_add_link_command(ctx: Context, link=None):
 
 
 if __name__ == '__main__':
-    # не знаю, как нормально проинициализировать редис
-    # init_anime_links_list("anime_pics_links.txt", anime_pics_list)
     logger.info("Начинаю подключение к серверу ...")
     try:
         bot.run(config.API_TOKEN)

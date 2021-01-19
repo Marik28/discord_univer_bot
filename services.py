@@ -1,11 +1,10 @@
-import re
-
 from discord import Embed
 
 from constants import COMMANDS_DESCRIPTION, anime_pics_list
 from datetime_helpers import change_ending, WEEK_DAYS
 from embed_handlers import create_field_template, create_embed_template
 from exceptions import InvalidImageLink
+from validators import is_valid_image_link
 
 
 def make_help_embed_message() -> Embed:
@@ -175,15 +174,4 @@ def add_link_to_list_and_file(link: str) -> None:
             anime_pics_list.append(link)
             with open("anime_pics_links.txt", "a", encoding="utf-8") as file:
                 file.write(f"\n{link}")
-
-
-def is_valid_image_link(link: str) -> bool:
-    link_pattern = re.compile(r"^(?P<protocol>http|https)://"
-                              r"(?P<domain_and_path>[\w/.-]+)"
-                              r"(?P<img_extension>\.(png|jpeg|jpg))"
-                              r"(?P<smth_else>.+)?$")
-    if link_pattern.match(link) is None:
-        return False
-    else:
-        return True
 

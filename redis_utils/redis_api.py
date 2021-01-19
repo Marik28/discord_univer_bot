@@ -2,7 +2,7 @@ import redis
 
 from constants import ANIME_LINKS_DB, ANIME_LINKS_FILE
 from exceptions import InvalidImageLink
-from services import is_valid_image_link
+from validators import is_valid_image_link
 
 ANIME_LINKS_LIST = "anime_links"
 
@@ -13,7 +13,6 @@ def init_redis(filename: str) -> redis.Redis:
     connection = redis.Redis(host="localhost", port=6379, db=ANIME_LINKS_DB)
     connection.flushdb()
     connection.sadd(ANIME_LINKS_LIST, *links)
-    print(connection.smembers(ANIME_LINKS_LIST))
     return connection
 
 
@@ -30,3 +29,7 @@ def add_link_to_redis(link: str) -> None:
             connection.sadd(ANIME_LINKS_LIST, link)
             with open(ANIME_LINKS_FILE, "a", encoding="utf-8") as file:
                 file.write(f"\n{link}")
+
+
+def get_random_link() -> str:
+    return connection.srandmember(ANIME_LINKS_LIST).decode()
