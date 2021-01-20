@@ -5,6 +5,7 @@ from api_helpers import get_teacher_list, get_day_schedule, get_week_schedule, g
 import config
 from constants import COMMAND_PREFIX, ERROR_MSG_BIT
 from datetime_helpers import from_word_to_day, DAY_SPECIAL_WORDS, get_week_parity
+from embed_handlers import make_embed_image
 from exceptions import ErrorFromServer, InvalidImageLink
 from logging_utils import logger, command_call_logger_decorator
 from redis_utils.redis_api import add_link_to_redis
@@ -113,9 +114,19 @@ async def process_add_link_command(ctx: Context, link=None):
     await ctx.send(msg)
 
 
-if __name__ == '__main__':
+@bot.command(aliases=["картинка", "аниме"])
+@command_call_logger_decorator
+async def process_get_image_command(ctx: Context):
+    """Отправляет рандомную пикчу из бд"""
+    msg = make_embed_image()
+    await ctx.send(embed=msg)
+
+
+@logger.catch()
+def main():
     logger.info("Начинаю подключение к серверу ...")
-    try:
-        bot.run(config.API_TOKEN)
-    except Exception as e:
-        logger.error(f"Произошла ошибка {e}. Бот завершил работу")
+    bot.run(config.API_TOKEN)
+
+
+if __name__ == '__main__':
+    main()
