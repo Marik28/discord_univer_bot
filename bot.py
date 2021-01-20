@@ -107,11 +107,9 @@ async def process_add_link_command(ctx: Context, link=None):
         msg = "Необходимо отправить ссылку на картинку"
     else:
         try:
-            add_link_to_redis(link)
+            msg = add_link_to_redis(link)
         except InvalidImageLink as e:
             msg = str(e)
-        else:
-            msg = "Ссылка успешно добавлена в список"
     await ctx.send(msg)
 
 

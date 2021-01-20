@@ -19,16 +19,18 @@ def init_redis(filename: str) -> redis.Redis:
 connection = init_redis(ANIME_LINKS_FILE)
 
 
-def add_link_to_redis(link: str) -> None:
+def add_link_to_redis(link: str) -> str:
     if not is_valid_image_link(link):
         raise InvalidImageLink("Ссылка не является правильной :( (по крайней мере она не прошла нашу проверку)")
     else:
         if connection.sismember(ANIME_LINKS_LIST, link):
-            pass
+            msg = 'Картинка уже есть в нашей базе'
         else:
             connection.sadd(ANIME_LINKS_LIST, link)
             with open(ANIME_LINKS_FILE, "a", encoding="utf-8") as file:
                 file.write(f"\n{link}")
+                msg = 'Картинка добавлена в базу успешно!'
+    return msg
 
 
 def get_random_link() -> str:

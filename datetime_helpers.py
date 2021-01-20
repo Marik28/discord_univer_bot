@@ -2,7 +2,7 @@ import datetime as dt
 
 DAY_SPECIAL_WORDS = {"сегодня", "завтра"}
 
-START_WEEK = 4
+START_WEEK = int(dt.date(year=2021, month=1, day=18).strftime('%W'))
 
 WEEK_DAYS = (
     "понедельник",
