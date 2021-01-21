@@ -6,9 +6,10 @@ logger.add("logs/logs.log", format="{time} {level} {message}", level="INFO")
 
 def command_call_logger_decorator(func):
     async def wrapper(ctx: Context, *args, **kwargs):
-
+        raw_command = ctx.message.content.split(" ")[0]
         logger.info(
-            f"Получено сообщение '{ctx.message.content}' с аргументами [{', '.join(args)}] "
+            f"Вызвана корутина {func.__name__}. "
+            f"Получено сообщение '{raw_command}' с аргументами [{', '.join(args)}] "
             f"и ключевыми аргументами [{', '.join(kwargs)}] "
             f"(Сервер - {ctx.guild} (id={ctx.guild.id}), "
             f"канал - {ctx.channel} (id={ctx.channel.id}) ) "
