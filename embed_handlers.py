@@ -39,5 +39,6 @@ def create_field_template(name: str = "-", value: str = "-", inline=False) -> di
 
 def make_embed_image() -> Embed:
     """Создает Embed для отправки картинки"""
-    embed = create_embed_template("Картиночка", allow_anime_thumbnail=False, allow_image=True)
+    embed = create_embed_template(title="Картиночка", description="Вот тебе картиночка",
+                                  allow_anime_thumbnail=False, allow_image=True)
     return Embed.from_dict(embed)
