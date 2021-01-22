@@ -3,14 +3,14 @@ from discord.ext.commands import Context
 
 from api_helpers import get_teacher_list, get_day_schedule, get_week_schedule, get_subject_list
 import config
-from constants import COMMAND_PREFIX, ERROR_MSG_BIT
+from constants import COMMAND_PREFIX, ERROR_MSG_BIT, anime_pics_list
 from datetime_helpers import from_word_to_day, DAY_SPECIAL_WORDS, get_week_parity
 from embed_handlers import make_embed_image
 from exceptions import ErrorFromServer, InvalidImageLink
 from logging_utils import logger, command_call_logger_decorator
-from redis_utils.redis_api import add_link_to_redis
+# from redis_utils.redis_api import add_link_to_redis
 from services import make_embed_day_schedule, make_embed_week_schedule, make_help_embed_message, \
-    make_embed_teacher_list, make_embed_subject_list
+    make_embed_teacher_list, make_embed_subject_list, init_anime_links_list, add_link_to_list_and_file
 
 bot = commands.Bot(command_prefix=COMMAND_PREFIX)
 
@@ -108,7 +108,8 @@ async def process_add_link_command(ctx: Context, link=None):
         msg = "Необходимо отправить ссылку на картинку"
     else:
         try:
-            msg = add_link_to_redis(link)
+            # msg = add_link_to_redis(link)
+            msg = add_link_to_list_and_file(link)
         except InvalidImageLink as e:
             msg = str(e)
     await ctx.send(msg)
@@ -125,6 +126,7 @@ async def process_get_image_command(ctx: Context):
 @logger.catch()
 def main():
     logger.info("Начинаю подключение к серверу ...")
+    init_anime_links_list("anime_pics_links.txt", anime_pics_list)
     bot.run(config.API_TOKEN)
 
 

@@ -2,7 +2,7 @@ import random
 
 from discord import Embed
 
-from constants import COMMAND_PREFIX
+from constants import COMMAND_PREFIX, anime_pics_list
 from redis_utils.redis_api import get_random_link
 
 
@@ -22,9 +22,11 @@ def create_embed_template(title: str = "-", description: str = "-", color=None, 
     else:
         embed_dict["color"] = random.randint(0, 0xFFFFFF)
     if allow_anime_thumbnail:
-        embed_dict["thumbnail"] = {"url": get_random_link()}
+        # embed_dict["thumbnail"] = {"url": get_random_link()}
+        embed_dict["thumbnail"] = {"url": random.choice(anime_pics_list)}
     if allow_image:
-        embed_dict["image"] = {"url": get_random_link()}
+        # embed_dict["image"] = {"url": get_random_link()}
+        embed_dict["image"] = {"url": random.choice(anime_pics_list)}
     return embed_dict
 
 
