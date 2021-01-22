@@ -1,7 +1,7 @@
 from discord.ext.commands import Context
 from loguru import logger
 
-logger.add("logs/logs.log", format="{time} {level} {message}", level="INFO")
+logger.add("logs/logs.log", format="{time} {level} {message}", level="INFO", rotation="1 MB", compression="zip")
 
 
 def command_call_logger_decorator(func):
