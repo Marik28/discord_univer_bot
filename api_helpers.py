@@ -61,9 +61,12 @@ async def get_teacher_list(arg):
 async def get_subject_list(arg):
     """Делает запрос к серверу и получает отфильтрованный список предметов
     исходя из переданного аргумента"""
-    query = {
-        "q": arg,
-    }
+    if arg is not None:
+        query = {
+            "q": arg,
+        }
+    else:
+        query = None
     r_json = await handle_request('subjects/filter/', query)
     return r_json
 

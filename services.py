@@ -148,6 +148,16 @@ def make_embed_subject_list(subjects_info: list, init_query: str) -> Embed:
     return Embed.from_dict(embed_dict)
 
 
+def make_brief_subject_list(subjects) -> Embed:
+    embed_dict = create_embed_template("Все предметы")
+    for subject in subjects:
+        name = subject["name"]
+        my_link = f"Видосики - {subject['my_playlist_url']}"
+        subj_field = create_field_template(name=name, value=my_link)
+        embed_dict["fields"].append(subj_field)
+    return Embed.from_dict(embed_dict)
+
+
 def process_teachers(subject):
     lecturer = get_teacher_name(subject["lecturer"], initials=True) if subject["lecturer"] else None
     lab_teacher = get_teacher_name(subject["lab_teacher"], initials=True) if subject["lab_teacher"] else None

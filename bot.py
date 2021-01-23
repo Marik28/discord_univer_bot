@@ -7,21 +7,23 @@ from constants import COMMAND_PREFIX, ERROR_MSG_BIT, anime_pics_list
 from datetime_helpers import from_word_to_day, DAY_SPECIAL_WORDS, get_week_parity
 from embed_handlers import make_embed_image
 from exceptions import ErrorFromServer, InvalidImageLink
-from logging_utils import logger, command_call_logger_decorator
+# from logging_utils import logger, command_call_logger_decorator
 # from redis_utils.redis_api import add_link_to_redis
 from services import make_embed_day_schedule, make_embed_week_schedule, make_help_embed_message, \
-    make_embed_teacher_list, make_embed_subject_list, init_anime_links_list, add_link_to_list_and_file
+    make_embed_teacher_list, make_embed_subject_list, init_anime_links_list, add_link_to_list_and_file, \
+    make_brief_subject_list
 
 bot = commands.Bot(command_prefix=COMMAND_PREFIX)
 
 
 @bot.event
 async def on_ready():
-    logger.info("Бот подключился к серверу")
+    print("Бот подключился к серверу")
+    # logger.info("Бот подключился к серверу")
 
 
 @bot.command(aliases=['расписание', 'пары'])
-@command_call_logger_decorator
+# @command_call_logger_decorator
 async def process_day_schedule_command(ctx: Context, day: str = None, parity: str = None):
     """Узнает расписание на конкретный день недели. Если не указана четность недели, берется четность текущей недели.
     Результат отправляет в виде Embed-сообщения"""
@@ -43,7 +45,7 @@ async def process_day_schedule_command(ctx: Context, day: str = None, parity: st
 
 
 @bot.command(name='неделя')
-@command_call_logger_decorator
+# @command_call_logger_decorator
 async def process_week_schedule_command(ctx: Context, parity: str = None):
     """Узнает расписание на целую неделю. Если не указана четность недели, берется четность текущей недели.
     Результат отправляет в виде Embed-сообщения"""
@@ -58,14 +60,14 @@ async def process_week_schedule_command(ctx: Context, parity: str = None):
 
 
 @bot.command(name='info')
-@command_call_logger_decorator
+# @command_call_logger_decorator
 async def process_test_command(ctx: Context):
     """Отправляет Embed-сообщение со списком команд и их описанием"""
     await ctx.send(embed=make_help_embed_message())
 
 
 @bot.command(aliases=['препод', 'преподы', 'преподаватель', 'преподаватели'])
-@command_call_logger_decorator
+# @command_call_logger_decorator
 async def process_teacher_command(ctx: Context, arg=None):
     """Производит поиск по преподам на совпадение Ф./И./О. препода.
     Возвращает список совпадений в виде Embed-сообщения"""
@@ -83,25 +85,26 @@ async def process_teacher_command(ctx: Context, arg=None):
 
 
 @bot.command(aliases=['предмет', 'предметы'])
-@command_call_logger_decorator
+# @command_call_logger_decorator
 async def process_subjects_command(ctx: Context, arg=None):
     """Производит поиск по предметам на совпадение части названия.
     Возвращает список совпадений в виде Embed-сообщения"""
-    if arg is None:
-        msg = f"Небходимо написать хотя бы часть названия предмета. {ERROR_MSG_BIT}"
+    try:
+        raw_subjects_info = await get_subject_list(arg)
+    except ErrorFromServer as e:
+        msg = str(e)
     else:
-        try:
-            raw_subjects_info = await get_subject_list(arg)
-        except ErrorFromServer as e:
-            msg = str(e)
+        if arg is not None:
+            reply_msg = make_embed_subject_list(raw_subjects_info, arg)
         else:
-            await ctx.send(embed=make_embed_subject_list(raw_subjects_info, arg))
-            return
+            reply_msg = make_brief_subject_list(raw_subjects_info)
+        await ctx.send(embed=reply_msg)
+        return
     await ctx.send(msg)
 
 
 @bot.command(aliases=["добавить", "addlink"])
-@command_call_logger_decorator
+# @command_call_logger_decorator
 async def process_add_link_command(ctx: Context, link=None):
     """Добавляет ссылку на картинку в список ссылок и в файл с ссылаками"""
     if link is None:
@@ -116,16 +119,16 @@ async def process_add_link_command(ctx: Context, link=None):
 
 
 @bot.command(aliases=["картинка", "аниме"])
-@command_call_logger_decorator
+# @command_call_logger_decorator
 async def process_get_image_command(ctx: Context):
     """Отправляет рандомную пикчу из бд"""
     msg = make_embed_image()
     await ctx.send(embed=msg)
 
 
-@logger.catch()
+# @logger.catch()
 def main():
-    logger.info("Начинаю подключение к серверу ...")
+    # logger.info("Начинаю подключение к серверу ...")
     init_anime_links_list("anime_pics_links.txt", anime_pics_list)
     bot.run(config.API_TOKEN)
 
