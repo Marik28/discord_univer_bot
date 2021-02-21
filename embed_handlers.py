@@ -2,8 +2,9 @@ import random
 
 from discord import Embed
 
-from constants import COMMAND_PREFIX, anime_pics_list
+
 # from redis_utils.redis_api import get_random_link
+from config import COMMAND_PREFIX, anime_pics_list
 
 
 def create_embed_template(title: str = "-", description: str = "-", color=None, allow_anime_thumbnail=True,

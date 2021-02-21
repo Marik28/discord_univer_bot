@@ -1,9 +1,8 @@
 import aiohttp
 from aiohttp import ClientConnectorError
 
+from config import BASE_API_URL
 from exceptions import ErrorFromServer
-
-BASE_API_URL = 'http://marik28.pythonanywhere.com/api/v1/'
 
 
 async def handle_request(endpoint: str, query=None):

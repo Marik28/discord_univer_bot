@@ -1,10 +1,14 @@
 import os
 from pathlib import Path
 
+anime_pics_list = []
 # всё, что нужно для бота
 API_TOKEN = 'Nzk1NTY2NjMxMzYzMTQ5ODI1.X_LPKQ.ES7n6v_FIpCNPamlqPeTaPE_U3c'
 # API_TOKEN = os.getenv('DISCORD_BOT_API_TOKEN')
 
+# параметры для взаимодействия с сервером REST API
+BASE_API_URL = 'http://marik28.pythonanywhere.com/api/v1/'
+# BASE_API_URL = os.getenv("BASE_API_URL")
 
 # команды и прочее
 
@@ -37,3 +41,7 @@ ANIME_LINKS_FILE = BASE_DIR / "anime_pics_links.txt"
 ANIME_LINKS_DB = 0
 TEST_DB = 1
 ANIME_LINKS_SET = "anime_links"
+# ANIME_LINKS_DB = os.getenv("ANIME_LINKS_DB")
+# ANIME_LINKS_SET = os.getenv("ANIME_LINKS_SET")
+# REDIS_PORT = os.getenv("REDIS_PORT")
+# REDIS_HOST = os.getenv("REDIS_HOST")
