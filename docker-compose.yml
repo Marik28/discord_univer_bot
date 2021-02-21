@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  db:
+    image: redis
+  bot:
+    build: .
+    environment:
+      - BASE_API_URL=
+      - DISCORD_BOT_API_TOKEN=
+      - ANIME_LINKS_DB=
+      - ANIME_LINKS_SET=
