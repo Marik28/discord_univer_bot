@@ -1,6 +1,6 @@
 import re
 
-URL_VALID_CHARS = "-._~:/?#[]@!$&'()*+,;="
+URL_VALID_CHARS = "-._~:/?#[]@!%$&'()*+,;="
 
 
 def is_valid_image_link(link: str) -> bool:
