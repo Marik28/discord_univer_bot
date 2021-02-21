@@ -127,9 +127,11 @@ async def process_get_image_command(ctx: Context):
 
 # @logger.catch()
 def main():
-    anime_pics_list = []
     # logger.info("Начинаю подключение к серверу ...")
-    init_anime_links_list("anime_pics_links.txt", anime_pics_list)
+    # redis_conn = get_redis_connection()
+    # links_set_manager = LinksSetManager(redis_conn, ANIME_LINKS_SET)
+
+    init_anime_links_list("anime_pics_links.txt", config.anime_pics_list)
     bot.run(config.API_TOKEN)
 
 
