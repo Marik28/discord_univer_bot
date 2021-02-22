@@ -3,10 +3,12 @@ version: '3'
 services:
   db:
     image: redis
+    restart: always
   bot:
     build: .
+    restart: always
     environment:
-      - BASE_API_URL=
-      - DISCORD_BOT_API_TOKEN=
-      - ANIME_LINKS_DB=
-      - ANIME_LINKS_SET=
+      - BASE_API_URL=http://marik28.pythonanywhere.com/api/v1/
+      - DISCORD_BOT_API_TOKEN=NzgwNzQyMDEzODc1NzgxNjY0.X7zgqQ.Tcf2XPzOlNT0ujQPbUgW1Wb7gvE
+      - ANIME_LINKS_DB=lul
+      - ANIME_LINKS_SET=kek

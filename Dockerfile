@@ -6,8 +6,6 @@ COPY . .
 RUN mkdir -p logs
 RUN pip install --no-cache-dir -r requirements.txt
 RUN ls
-RUN python write_data.py
 
-
-
-ENTRYPOINT "python bot.py"
+RUN chmod a+x ./run.sh
+ENTRYPOINT ["./run.sh"]

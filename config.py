@@ -2,20 +2,22 @@ import os
 from pathlib import Path
 
 anime_pics_list = []
+
 # всё, что нужно для бота
-# API_TOKEN = 'Nzk1NTY2NjMxMzYzMTQ5ODI1.X_LPKQ.ES7n6v_FIpCNPamlqPeTaPE_U3c'
 # это тот, который запущен на heroku
-API_TOKEN = "NzgwNzQyMDEzODc1NzgxNjY0.X7zgqQ.Tcf2XPzOlNT0ujQPbUgW1Wb7gvE"
-# API_TOKEN = os.getenv('DISCORD_BOT_API_TOKEN')
+# API_TOKEN = 'Nzk1NTY2NjMxMzYzMTQ5ODI1.X_LPKQ.ES7n6v_FIpCNPamlqPeTaPE_U3c'
+
+# API_TOKEN = "NzgwNzQyMDEzODc1NzgxNjY0.X7zgqQ.Tcf2XPzOlNT0ujQPbUgW1Wb7gvE"
+API_TOKEN = os.getenv('DISCORD_BOT_API_TOKEN')
 
 # параметры для взаимодействия с сервером REST API
-BASE_API_URL = 'http://marik28.pythonanywhere.com/api/v1/'
-# BASE_API_URL = os.getenv("BASE_API_URL")
+# BASE_API_URL = 'http://marik28.pythonanywhere.com/api/v1/'
+BASE_API_URL = os.getenv("BASE_API_URL")
 
 # команды и прочее
 
-COMMAND_PREFIX = '.'
-# COMMAND_PREFIX = os.getenv("COMMAND_PREFIX")
+# COMMAND_PREFIX = '.'
+COMMAND_PREFIX = os.getenv("COMMAND_PREFIX")
 
 COMMANDS_DESCRIPTION = {
     f"{COMMAND_PREFIX}расписание [день] <числитель/знаменатель>":
