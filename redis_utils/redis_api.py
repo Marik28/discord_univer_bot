@@ -1,6 +1,6 @@
 from redis import Redis
 
-from config import ANIME_LINKS_DB
+from config import ANIME_LINKS_DB, ANIME_LINKS_SET
 from exceptions import InvalidImageLink
 from validators import is_valid_image_link
 
@@ -9,7 +9,10 @@ def decode_string(func):
     """Декоратор для декодирования результата функций, возвращающих bytes, в str """
 
     def wrapper(*args, **kwargs) -> str:
-        return func(*args, **kwargs).decode()
+        result = func(*args, **kwargs).decode()
+        if isinstance(result, bytes):
+            result.decode()
+        return result
 
     return wrapper
 
@@ -64,3 +67,7 @@ class LinksSetManager(RedisSetManager):
 
 def get_redis_connection(host="localhost", port=6379, db=ANIME_LINKS_DB) -> Redis:
     return Redis(host=host, port=port, db=db)
+
+
+redis_conn = get_redis_connection()
+links_set_manager = LinksSetManager(redis_conn, ANIME_LINKS_SET)

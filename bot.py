@@ -8,6 +8,7 @@ from embed_handlers import make_embed_image
 from exceptions import ErrorFromServer, InvalidImageLink
 # from logging_utils import logger, command_call_logger_decorator
 # from redis_utils.redis_api import add_link_to_redis
+from redis_utils.redis_api import get_redis_connection, LinksSetManager
 from services import make_embed_day_schedule, make_embed_week_schedule, make_help_embed_message, \
     make_embed_teacher_list, make_embed_subject_list, init_anime_links_list, add_link_to_list_and_file, \
     make_brief_subject_list
@@ -128,10 +129,8 @@ async def process_get_image_command(ctx: Context):
 # @logger.catch()
 def main():
     # logger.info("Начинаю подключение к серверу ...")
-    # redis_conn = get_redis_connection()
-    # links_set_manager = LinksSetManager(redis_conn, ANIME_LINKS_SET)
 
-    init_anime_links_list("anime_pics_links.txt", config.anime_pics_list)
+    # init_anime_links_list("anime_pics_links.txt", config.anime_pics_list)
     bot.run(config.API_TOKEN)
 
 

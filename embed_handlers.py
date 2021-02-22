@@ -5,6 +5,7 @@ from discord import Embed
 
 # from redis_utils.redis_api import get_random_link
 from config import COMMAND_PREFIX, anime_pics_list
+from redis_utils.redis_api import links_set_manager
 
 
 def create_embed_template(title: str = "-", description: str = "-", color=None, allow_anime_thumbnail=True,
@@ -26,8 +27,8 @@ def create_embed_template(title: str = "-", description: str = "-", color=None, 
         # embed_dict["thumbnail"] = {"url": get_random_link()}
         embed_dict["thumbnail"] = {"url": random.choice(anime_pics_list)}
     if allow_image:
-        # embed_dict["image"] = {"url": get_random_link()}
-        embed_dict["image"] = {"url": random.choice(anime_pics_list)}
+        embed_dict["image"] = {"url": links_set_manager.get_random_value()}
+        # embed_dict["image"] = {"url": random.choice(anime_pics_list)}
     return embed_dict
 
 
