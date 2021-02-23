@@ -3,8 +3,7 @@ import random
 from discord import Embed
 
 
-# from redis_utils.redis_api import get_random_link
-from config import COMMAND_PREFIX, anime_pics_list
+from config import COMMAND_PREFIX
 from redis_utils.redis_api import links_set_manager
 
 

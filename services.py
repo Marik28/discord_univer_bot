@@ -1,10 +1,8 @@
 from discord import Embed
 
-from config import COMMANDS_DESCRIPTION, anime_pics_list
+from config import COMMANDS_DESCRIPTION
 from datetime_helpers import change_ending, WEEK_DAYS
 from embed_handlers import create_field_template, create_embed_template
-from exceptions import InvalidImageLink
-from validators import is_valid_image_link
 
 
 def make_help_embed_message() -> Embed:
@@ -173,17 +171,17 @@ def init_anime_links_list(filename: str, links_list: list) -> None:
         links_list.extend(link.strip() for link in file.readlines())
 
 
-def add_link_to_list_and_file(link: str) -> str:
-    """Осуществляет валидацию ссылки"""
-    if not is_valid_image_link(link):
-        raise InvalidImageLink("Ссылка не является правильной :( (по крайней мере она не прошла нашу проверку)")
-    else:
-        if link in anime_pics_list:
-            msg = 'Картинка уже есть в бд!'
-        else:
-            anime_pics_list.append(link)
-            with open("anime_pics_links.txt", "a", encoding="utf-8") as file:
-                file.write(f"\n{link}")
-            msg = 'Картинка успешно добавлена'
-    return msg
+# def add_link_to_list_and_file(link: str) -> str:
+#     """Осуществляет валидацию ссылки"""
+#     if not is_valid_image_link(link):
+#         raise InvalidImageLink("Ссылка не является правильной :( (по крайней мере она не прошла нашу проверку)")
+#     else:
+#         if link in anime_pics_list:
+#             msg = 'Картинка уже есть в бд!'
+#         else:
+#             anime_pics_list.append(link)
+#             with open("anime_pics_links.txt", "a", encoding="utf-8") as file:
+#                 file.write(f"\n{link}")
+#             msg = 'Картинка успешно добавлена'
+#     return msg
 

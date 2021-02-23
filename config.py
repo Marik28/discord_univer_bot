@@ -1,13 +1,8 @@
 import os
 from pathlib import Path
 
-anime_pics_list = []
-
 # всё, что нужно для бота
-# это тот, который запущен на heroku
-# API_TOKEN = 'Nzk1NTY2NjMxMzYzMTQ5ODI1.X_LPKQ.ES7n6v_FIpCNPamlqPeTaPE_U3c'
 
-# API_TOKEN = "NzgwNzQyMDEzODc1NzgxNjY0.X7zgqQ.Tcf2XPzOlNT0ujQPbUgW1Wb7gvE"
 API_TOKEN = os.getenv('DISCORD_BOT_API_TOKEN')
 
 # параметры для взаимодействия с сервером REST API
@@ -39,7 +34,6 @@ ERROR_MSG_BIT = f"Напиши {COMMAND_PREFIX}info, чтобы узнать п�
 # директории
 
 BASE_DIR = Path.cwd()
-ANIME_LINKS_FILE = BASE_DIR / "anime_pics_links.txt"
 
 # переменные, связанные с Redis
 
