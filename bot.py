@@ -118,7 +118,7 @@ async def process_add_link_command(ctx: Context, link=None):
     await ctx.send(msg)
 
 
-@bot.command(aliases=["картинка", "аниме"])
+@bot.command(aliases=["картинка", "аниме", "anime"])
 # @command_call_logger_decorator
 async def process_get_image_command(ctx: Context):
     """Отправляет рандомную пикчу из бд"""

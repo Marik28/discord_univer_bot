@@ -1,14 +1,19 @@
 version: '3'
 
 services:
-  db:
-    image: redis
+  redis:
+    image: library/redis:6.0.10-alpine
     restart: always
   bot:
     build: .
     restart: always
     environment:
+#      - REDIS_HOST=redis
       - BASE_API_URL=http://marik28.pythonanywhere.com/api/v1/
       - DISCORD_BOT_API_TOKEN=NzgwNzQyMDEzODc1NzgxNjY0.X7zgqQ.Tcf2XPzOlNT0ujQPbUgW1Wb7gvE
-      - ANIME_LINKS_DB=lul
-      - ANIME_LINKS_SET=kek
+      - ANIME_LINKS_DB=0
+      - ANIME_LINKS_SET=anime_links
+      - COMMAND_PREFIX=.
+    links:
+      - "redis:db"
+

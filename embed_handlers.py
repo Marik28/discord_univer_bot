@@ -25,7 +25,7 @@ def create_embed_template(title: str = "-", description: str = "-", color=None, 
         embed_dict["color"] = random.randint(0, 0xFFFFFF)
     if allow_anime_thumbnail:
         # embed_dict["thumbnail"] = {"url": get_random_link()}
-        embed_dict["thumbnail"] = {"url": random.choice(anime_pics_list)}
+        embed_dict["thumbnail"] = {"url": links_set_manager.get_random_value()}
     if allow_image:
         embed_dict["image"] = {"url": links_set_manager.get_random_value()}
         # embed_dict["image"] = {"url": random.choice(anime_pics_list)}

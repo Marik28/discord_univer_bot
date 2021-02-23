@@ -17,7 +17,7 @@ BASE_API_URL = os.getenv("BASE_API_URL")
 # команды и прочее
 
 # COMMAND_PREFIX = '.'
-COMMAND_PREFIX = os.getenv("COMMAND_PREFIX")
+COMMAND_PREFIX = os.getenv("COMMAND_PREFIX", ".")
 
 COMMANDS_DESCRIPTION = {
     f"{COMMAND_PREFIX}расписание [день] <числитель/знаменатель>":
@@ -43,10 +43,8 @@ ANIME_LINKS_FILE = BASE_DIR / "anime_pics_links.txt"
 
 # переменные, связанные с Redis
 
-ANIME_LINKS_DB = 0
+REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
+REDIS_PORT = int(os.getenv("REDIS_PORT", "6379"))
+ANIME_LINKS_DB = int(os.getenv("ANIME_LINKS_DB", "0"))
+ANIME_LINKS_SET = os.getenv("ANIME_LINKS_SET", "anime_links")
 TEST_DB = 1
-ANIME_LINKS_SET = "anime_links"
-# ANIME_LINKS_DB = os.getenv("ANIME_LINKS_DB")
-# ANIME_LINKS_SET = os.getenv("ANIME_LINKS_SET")
-# REDIS_PORT = os.getenv("REDIS_PORT")
-# REDIS_HOST = os.getenv("REDIS_HOST")
