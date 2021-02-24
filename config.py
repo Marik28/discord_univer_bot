@@ -11,7 +11,6 @@ BASE_API_URL = os.getenv("BASE_API_URL")
 
 # команды и прочее
 
-# COMMAND_PREFIX = '.'
 COMMAND_PREFIX = os.getenv("COMMAND_PREFIX", ".")
 
 COMMANDS_DESCRIPTION = {
@@ -41,4 +40,4 @@ REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
 REDIS_PORT = int(os.getenv("REDIS_PORT", "6379"))
 ANIME_LINKS_DB = int(os.getenv("ANIME_LINKS_DB", "0"))
 ANIME_LINKS_SET = os.getenv("ANIME_LINKS_SET", "anime_links")
-TEST_DB = 1
+TEST_DB = int(os.getenv("TEST_DB", "0"))

@@ -7,36 +7,27 @@ from exceptions import InvalidImageLink
 from validators import is_valid_image_link
 
 
-# не знаю, нужно ли это пока что
-# class BaseRedisCollectionManager:
-#     """Базовый класс для управления коллекциями Redis"""
-#     def __init__(self, connection: Redis):
-#         self._connection = connection
-#
-#     def close_connection(self):
-#         """Закрывает соединение с Redis"""
-#         self._connection.close()
-
-
 class RedisSetManager:
     """Класс-обертка для упрощенного управления конкретным множеством в Redis.
-    Возвращаемые значения автоматически декодируются в str"""
+    Возвращаемые значения автоматически декодируются в str. Ведет себя как встроенный set"""
 
-    def __init__(self, connection: Redis, set_name: str):
-        self._connection = connection
+    def __init__(self, redis_: Redis, set_name: str):
+        """Необходимо передать экземпляр Redis `redis` с открытым соединением и имя множества `set_name`,
+        которым будем пользоваться """
+        self._redis = redis_
         self._set_name = set_name
 
     def update(self, values: Iterable) -> None:
         """Добавляет несколько значений во множество"""
-        self._connection.sadd(self._set_name, *values)
+        self._redis.sadd(self._set_name, *values)
 
     def add(self, value: str) -> None:
         """Добавляет значение во множество"""
-        self._connection.sadd(self._set_name, value)
+        self._redis.sadd(self._set_name, value)
 
     def get_random_value(self) -> Union[str, None]:
         """Возвращает случайное значение из множества. Если множество пустое, возвращает None"""
-        random_value: bytes = self._connection.srandmember(self._set_name)
+        random_value: bytes = self._redis.srandmember(self._set_name)
         if random_value is None:
             return random_value
         else:
@@ -44,15 +35,15 @@ class RedisSetManager:
 
     def clear(self):
         """Очищает множество (== удаляет его)"""
-        self._connection.delete(self._set_name)
+        self._redis.delete(self._set_name)
 
     def close_connection(self):
         """Закрывает соединение с Redis"""
-        self._connection.close()
+        self._redis.close()
 
     def pop(self) -> Union[str, None]:
         """Удаляет и возвращает случайное значение из множества. Если множество пустое, возвращает None"""
-        random_value: bytes = self._connection.spop(self._set_name)
+        random_value: bytes = self._redis.spop(self._set_name)
         if random_value is None:
             return random_value
         else:
@@ -60,19 +51,20 @@ class RedisSetManager:
 
     def discard(self, value: str):
         """Удаляет из элемент из множества, если он есть там"""
-        self._connection.srem(self._set_name, value)
+        self._redis.srem(self._set_name, value)
 
     def __len__(self):
         """Возвращает количество элементов множества"""
-        return self._connection.scard(self._set_name)
+        return self._redis.scard(self._set_name)
 
     def __iter__(self):
         """Возвращает итератор со всеми элементами множества"""
-        all_elements = self._connection.smembers(self._set_name)
+        all_elements = self._redis.smembers(self._set_name)
         return (elem.decode() for elem in all_elements)
 
     def __contains__(self, item: str):
-        return self._connection.sismember(self._set_name, item)
+        """Перегрузки оператора `in` для проверки наличия элемента во множестве"""
+        return self._redis.sismember(self._set_name, item)
 
 
 class LinksSetManager(RedisSetManager):

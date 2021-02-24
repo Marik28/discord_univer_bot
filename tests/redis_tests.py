@@ -24,8 +24,8 @@ class RedisSetTests(unittest.TestCase):
         value = "example"
         self.set.add(value)
         assert self.connection.scard(set_name) == 1, "При добавлении элемента во множесто, его размер увеличивается"
-        assert self.connection.srandmember(set_name).decode() == value, \
-            "Единственный рандомный элемент будет тот же, что мы добавили"
+        assert self.connection.sismember(set_name, value) is True, \
+            "элемент присутствует во множестве"
         self.connection.delete(set_name)
 
     def test_len_method(self):
