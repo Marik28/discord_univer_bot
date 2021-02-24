@@ -19,7 +19,8 @@ from validators import is_valid_image_link
 
 
 class RedisSetManager:
-    """Класс для упрощенного управления конкретным множеством в Redis"""
+    """Класс-обертка для упрощенного управления конкретным множеством в Redis.
+    Возвращаемые значения автоматически декодируются в str"""
 
     def __init__(self, connection: Redis, set_name: str):
         self._connection = connection
@@ -57,9 +58,21 @@ class RedisSetManager:
         else:
             return random_value.decode()
 
+    def discard(self, value: str):
+        """Удаляет из элемент из множества, если он есть там"""
+        self._connection.srem(self._set_name, value)
+
     def __len__(self):
         """Возвращает количество элементов множества"""
         return self._connection.scard(self._set_name)
+
+    def __iter__(self):
+        """Возвращает итератор со всеми элементами множества"""
+        all_elements = self._connection.smembers(self._set_name)
+        return (elem.decode() for elem in all_elements)
+
+    def __contains__(self, item: str):
+        return self._connection.sismember(self._set_name, item)
 
 
 class LinksSetManager(RedisSetManager):

@@ -12,6 +12,7 @@ class RedisSetTests(unittest.TestCase):
 
     def setUp(self) -> None:
         self.connection = connection
+        self.connection.delete(set_name)
         self.set = RedisSetManager(connection, set_name)
 
     def tearDown(self) -> None:
@@ -43,6 +44,31 @@ class RedisSetTests(unittest.TestCase):
         self.connection.sadd(set_name, "element")
         self.set.clear()
         assert self.connection.scard(set_name) == 0
+
+    def test_contains_method_with_existing_item(self):
+        item = "test_item"
+        self.connection.sadd(set_name, item)
+        self.assertTrue(item in self.set)
+
+    def test_contains_method_with_non_existing_item(self):
+        self.connection.delete(set_name)
+        item = "test"
+        self.assertFalse(item in self.set)
+
+    def test_update_method(self):
+        items = ["1", "2", "3"]
+        self.set.update(items)
+        for item in items:
+            self.assertTrue(self.connection.sismember(set_name, item))
+
+    def test_iter_method(self):
+        items = {"1", "2", "3"}
+        self.connection.sadd(set_name, *items)
+        from_redis = {elem for elem in self.set}
+        assert items == from_redis
+
+    def test_iter_with_empty_set(self):
+        assert len({elem for elem in self.set}) == 0
 
 
 if __name__ == '__main__':
