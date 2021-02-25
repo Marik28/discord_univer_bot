@@ -11,7 +11,7 @@ RUN chmod +x run.sh
 
 
 #ENV BASE_API_URL=http://marik28.pythonanywhere.com/api/v1/
-#ENV DISCORD_BOT_API_TOKEN=NzgwNzQyMDEzODc1NzgxNjY0.X7zgqQ.Tcf2XPzOlNT0ujQPbUgW1Wb7gvE
+#ENV DISCORD_BOT_API_TOKEN=
 #ENV ANIME_LINKS_DB=0
 #ENV ANIME_LINKS_SET=anime_links
 #ENV COMMAND_PREFIX=.
