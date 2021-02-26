@@ -1,14 +1,16 @@
+from discord import User
 from discord.ext import commands
 from discord.ext.commands import Context
 
 from api_helpers import get_teacher_list, get_day_schedule, get_week_schedule, get_subject_list
 import config
 from datetime_helpers import from_word_to_day, DAY_SPECIAL_WORDS, get_week_parity
-from embed_handlers import make_embed_image
+from embed_handlers import make_embed_image, make_genshin_card
 from exceptions import ErrorFromServer, InvalidImageLink
+from genshin.utils import roll_character
 from redis_utils import links_set_manager
 from services import make_embed_day_schedule, make_embed_week_schedule, make_help_embed_message, \
-    make_embed_teacher_list, make_embed_subject_list, make_brief_subject_list
+    make_embed_teacher_list, make_embed_subject_list, make_brief_subject_list, increment_rolls
 
 bot = commands.Bot(command_prefix=config.COMMAND_PREFIX)
 
@@ -121,6 +123,16 @@ async def process_get_image_command(ctx: Context):
     """Отправляет рандомную пикчу из бд"""
     msg = make_embed_image()
     await ctx.send(embed=msg)
+
+
+@bot.command(aliases=["genshin", "геншин", "ролл", "roll"])
+async def process_genshin_command(ctx: Context):
+    """Делает ролл на случайного перса из геншина. Отправляет карточку Embed."""
+    author: User = ctx.author
+    roll_result = roll_character()
+    user_rolls_count = increment_rolls(author.id)
+    card = make_genshin_card(author.name, roll_result, user_rolls_count)
+    await ctx.send(embed=card)
 
 
 # @logger.catch()
