@@ -4,7 +4,7 @@ from discord import Embed
 
 
 from config import COMMAND_PREFIX
-from redis_utils.redis_api import links_set_manager
+from redis_utils import links_set_manager
 
 
 def create_embed_template(title: str = "-", description: str = "-", color=None, allow_anime_thumbnail=True,
