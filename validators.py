@@ -11,8 +11,6 @@ def is_valid_image_link(link: str) -> bool:
     return link_pattern.match(link) is not None
 
 
-print(IMAGE_LINK_PATTERN)
-
 # def is_valid_image_link(link: str) -> bool:
 #     link_pattern = re.compile(r"^(?P<protocol>http|https)://"
 #                               r"(?P<domain_and_path>[\w{}]+)"
