@@ -1,7 +1,7 @@
 import unittest
 
 from config import TEST_DB
-from redis_utils.redis_api import RedisSetManager, get_redis_connection
+from redis_utils import get_redis_connection, RedisSetManager
 
 connection = get_redis_connection(db=TEST_DB)
 set_name = "test_set"

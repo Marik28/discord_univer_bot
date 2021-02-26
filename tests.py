@@ -1,7 +1,5 @@
-from collections import ItemsView
 
-d = {"a": "wqeqwe"}
-print()
-a = d.items()
-print()
-a.ke
+s = {"sdfsd", "sdfsd"}
+s.remove()
+s.discard()
+s.clear()
