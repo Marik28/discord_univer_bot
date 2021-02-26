@@ -6,7 +6,7 @@ import config
 from datetime_helpers import from_word_to_day, DAY_SPECIAL_WORDS, get_week_parity
 from embed_handlers import make_embed_image
 from exceptions import ErrorFromServer, InvalidImageLink
-from redis_utils.redis_api import links_set_manager
+from redis_utils import links_set_manager
 from services import make_embed_day_schedule, make_embed_week_schedule, make_help_embed_message, \
     make_embed_teacher_list, make_embed_subject_list, make_brief_subject_list
 
