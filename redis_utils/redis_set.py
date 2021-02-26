@@ -1,4 +1,4 @@
-from typing import Iterable, Union
+from typing import Iterable, Union, Iterator
 
 from redis import Redis
 
@@ -9,11 +9,12 @@ from validators import is_valid_image_link
 
 class RedisSetManager:
     """Класс-обертка для упрощенного управления конкретным множеством в Redis.
+    Redis обязательно должен быть инициализирован с `decode_responses=True`.
     Возвращаемые значения автоматически декодируются в str. Ведет себя как встроенный set"""
 
     def __init__(self, redis_: Redis, set_name: str):
         """Необходимо передать экземпляр Redis `redis` с открытым соединением и имя множества `set_name`,
-        которым будем пользоваться """
+        которым будем пользоваться. Redis обязательно должен быть инициализирован с `decode_responses=True`."""
         self._redis = redis_
         self._set_name = set_name
 
@@ -27,44 +28,38 @@ class RedisSetManager:
 
     def get_random_value(self) -> Union[str, None]:
         """Возвращает случайное значение из множества. Если множество пустое, возвращает None"""
-        random_value: bytes = self._redis.srandmember(self._set_name)
-        if random_value is None:
-            return random_value
-        else:
-            return random_value.decode()
+        return self._redis.srandmember(self._set_name)
 
-    def clear(self):
+    def clear(self) -> None:
         """Очищает множество (== удаляет его)"""
         self._redis.delete(self._set_name)
 
-    def close_connection(self):
+    def close_connection(self) -> None:
         """Закрывает соединение с Redis"""
         self._redis.close()
 
     def pop(self) -> Union[str, None]:
         """Удаляет и возвращает случайное значение из множества. Если множество пустое, возвращает None"""
-        random_value: bytes = self._redis.spop(self._set_name)
-        if random_value is None:
-            return random_value
-        else:
-            return random_value.decode()
+        return self._redis.spop(self._set_name)
 
-    def discard(self, value: str):
+    def discard(self, value: str) -> None:
         """Удаляет из элемент из множества, если он есть там"""
         self._redis.srem(self._set_name, value)
 
-    def __len__(self):
+    def __len__(self) -> int:
         """Возвращает количество элементов множества"""
         return self._redis.scard(self._set_name)
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[str]:
         """Возвращает итератор со всеми элементами множества"""
-        all_elements = self._redis.smembers(self._set_name)
-        return (elem.decode() for elem in all_elements)
+        return (elem for elem in self._redis.smembers(self._set_name))
 
-    def __contains__(self, item: str):
+    def __contains__(self, item: str) -> bool:
         """Перегрузки оператора `in` для проверки наличия элемента во множестве"""
         return self._redis.sismember(self._set_name, item)
+
+    # def __str__(self) -> str:
+    #     return self._redis.smembers()
 
 
 class LinksSetManager(RedisSetManager):
@@ -81,7 +76,7 @@ class LinksSetManager(RedisSetManager):
 
 
 def get_redis_connection(host=REDIS_HOST, port=REDIS_PORT, db=0) -> Redis:
-    return Redis(host=host, port=port, db=db)
+    return Redis(host=host, port=port, db=db, decode_responses=True)
 
 
 redis_conn = get_redis_connection(db=ANIME_LINKS_DB)
