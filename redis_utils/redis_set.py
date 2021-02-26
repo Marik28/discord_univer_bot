@@ -2,7 +2,6 @@ from typing import Iterable, Union, Iterator
 
 from redis import Redis
 
-from config import ANIME_LINKS_DB, ANIME_LINKS_SET, REDIS_PORT, REDIS_HOST
 from exceptions import InvalidImageLink
 from validators import is_valid_image_link
 
@@ -31,7 +30,7 @@ class RedisSetManager:
         return self._redis.srandmember(self._set_name)
 
     def clear(self) -> None:
-        """Очищает множество (== удаляет его)"""
+        """Удаляет все элементы из множества (равносильно удалению множества из Redis)"""
         self._redis.delete(self._set_name)
 
     def close_connection(self) -> None:
@@ -42,9 +41,17 @@ class RedisSetManager:
         """Удаляет и возвращает случайное значение из множества. Если множество пустое, возвращает None"""
         return self._redis.spop(self._set_name)
 
-    def discard(self, value: str) -> None:
-        """Удаляет из элемент из множества, если он есть там"""
-        self._redis.srem(self._set_name, value)
+    def discard(self, element: str) -> None:
+        """Удаляет из элемент `element` из множества, если он есть там.
+        Если его нет во множестве, ничего не делает"""
+        self._redis.srem(self._set_name, element)
+
+    def remove(self, element: str) -> None:
+        """Удаляет из элемент `element` из множества, если он есть там.
+        Если его нет во множестве, возбуждает Key Error"""
+        existed: bool = self._redis.srem(self._set_name, element)
+        if not existed:
+            raise KeyError(f"Элемент {element} отсутсвует во множестве {self._set_name}")
 
     def __len__(self) -> int:
         """Возвращает количество элементов множества"""
@@ -55,11 +62,12 @@ class RedisSetManager:
         return (elem for elem in self._redis.smembers(self._set_name))
 
     def __contains__(self, item: str) -> bool:
-        """Перегрузки оператора `in` для проверки наличия элемента во множестве"""
+        """Возвращает True, если `item` является элементом множества, иначе False"""
         return self._redis.sismember(self._set_name, item)
 
-    # def __str__(self) -> str:
-    #     return self._redis.smembers()
+    def __str__(self) -> str:
+        """str(self)"""
+        return str(set(self._redis.smembers(self._set_name)))
 
 
 class LinksSetManager(RedisSetManager):
@@ -73,11 +81,3 @@ class LinksSetManager(RedisSetManager):
             raise InvalidImageLink("Ссылка не является правильной :( (по крайней мере она не прошла нашу проверку)")
         self.add(link)
         return 'Картинка добавлена в базу успешно!'
-
-
-def get_redis_connection(host=REDIS_HOST, port=REDIS_PORT, db=0) -> Redis:
-    return Redis(host=host, port=port, db=db, decode_responses=True)
-
-
-redis_conn = get_redis_connection(db=ANIME_LINKS_DB)
-links_set_manager = LinksSetManager(redis_conn, ANIME_LINKS_SET)
