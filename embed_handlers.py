@@ -1,9 +1,11 @@
 import random
+from typing import Union
 
 from discord import Embed
 
 
 from config import COMMAND_PREFIX
+from genshin.utils import generate_rating
 from redis_utils import links_set_manager
 
 
@@ -44,4 +46,27 @@ def make_embed_image() -> Embed:
     """Создает Embed для отправки картинки"""
     embed = create_embed_template(title="Картиночка", description="Вот тебе картиночка",
                                   allow_anime_thumbnail=False, allow_image=True)
+    return Embed.from_dict(embed)
+
+
+def make_genshin_card(user_name: str, rolled_character: Union[dict, None], user_rolls_count: int) -> Embed:
+    is_character = rolled_character is not None
+    title = f"Результат ролла {user_name}"
+    rolls_info = f"Всего роллов - {user_rolls_count}"
+    if not is_character:
+        description = f"Не везет получается. {rolls_info}"
+        return Embed.from_dict(create_embed_template(title=title, description=description, allow_anime_thumbnail=False))
+    description = f"Тебе выпал персонаж!!!. Всего роллов - {rolls_info}"
+
+    embed = create_embed_template(title=title, description=description, allow_anime_thumbnail=False)
+
+    stars = generate_rating(rolled_character['stars'])
+    rating_field = create_field_template(name="Редкость", value=f"{stars}", inline=False)
+    embed["fields"].append(rating_field)
+
+    name_field = create_field_template(name="Имя", value=f"{rolled_character['name']}")
+    embed["fields"].append(name_field)
+
+    embed["image"] = {"url": random.choice(rolled_character["images"])}
+
     return Embed.from_dict(embed)

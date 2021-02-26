@@ -6,7 +6,9 @@
     "weapon": "Меч",
     "sex": "Мужской",
     "area": "Мондштадт",
-    "image_url": "https://static.zerochan.net/Albedo.%28Genshin.Impact%29.full.3180452.jpg"
+    "images": [
+      "https://static.zerochan.net/Albedo.%28Genshin.Impact%29.full.3180452.jpg"
+    ]
   },
   {
     "stars": 4,
@@ -15,7 +17,9 @@
     "weapon": "Катализатор",
     "sex": "Женский",
     "area": "Мондштадт",
-    "image_url": "https://s1.zerochan.net/Barbara.%28Genshin.Impact%29.600.3159699.jpg"
+    "images": [
+      "https://s1.zerochan.net/Barbara.%28Genshin.Impact%29.600.3159699.jpg"
+    ]
   },
   {
     "stars": 4,
@@ -24,7 +28,9 @@
     "weapon": "Меч",
     "sex": "Мужской",
     "area": "Мондштадт",
-    "image_url": "https://static.zerochan.net/Bennett.%28Genshin.Impact%29.full.3174560.jpg"
+    "images": [
+      "https://static.zerochan.net/Bennett.%28Genshin.Impact%29.full.3174560.jpg"
+    ]
   },
   {
     "stars": 4,
@@ -33,7 +39,9 @@
     "weapon": "Двуручный меч",
     "sex": "Женский",
     "area": "Ли Юэ",
-    "image_url": "https://s1.zerochan.net/Beidou.600.3220093.jpg"
+    "images": [
+      "https://s1.zerochan.net/Beidou.600.3220093.jpg"
+    ]
   },
   {
     "stars": 5,
@@ -42,7 +50,9 @@
     "weapon": "Лук",
     "sex": "Мужской",
     "area": "Мондштадт",
-    "image_url": "https://s1.zerochan.net/Venti.600.3190108.jpg"
+    "images": [
+      "https://s1.zerochan.net/Venti.600.3190108.jpg"
+    ]
   },
   {
     "stars": 5,
@@ -51,7 +61,9 @@
     "weapon": "Лук",
     "sex": "Женский",
     "area": "Ли Юэ",
-    "image_url": "https://s1.zerochan.net/Ganyu.600.3218413.jpg"
+    "images": [
+      "https://s1.zerochan.net/Ganyu.600.3218413.jpg"
+    ]
   },
   {
     "stars": 5,
@@ -60,7 +72,9 @@
     "weapon": "Меч",
     "sex": "Женский",
     "area": "Мондштадт",
-    "image_url": "https://s1.zerochan.net/Jean.%28Genshin.Impact%29.600.3103751.jpg"
+    "images": [
+      "https://s1.zerochan.net/Jean.%28Genshin.Impact%29.600.3103751.jpg"
+    ]
   },
   {
     "stars": 5,
@@ -69,7 +83,9 @@
     "weapon": "Двуручный меч",
     "sex": "Мужской",
     "area": "Мондштадт",
-    "image_url": "https://static.zerochan.net/Diluc.full.3202967.png"
+    "images": [
+      "https://static.zerochan.net/Diluc.full.3202967.png"
+    ]
   },
   {
     "stars": 4,
@@ -78,7 +94,9 @@
     "weapon": "Лук",
     "sex": "Женский",
     "area": "Мондштадт",
-    "image_url": "https://s1.zerochan.net/Diona.600.3178092.jpg"
+    "images": [
+      "https://s1.zerochan.net/Diona.600.3178092.jpg"
+    ]
   },
   {
     "stars": 5,
@@ -87,7 +105,9 @@
     "weapon": "Катализатор",
     "sex": "Женский",
     "area": "Мондштадт",
-    "image_url": "https://s1.zerochan.net/Klee.%28Genshin.Impact%29.600.3194173.jpg"
+    "images": [
+      "https://s1.zerochan.net/Klee.%28Genshin.Impact%29.600.3194173.jpg"
+    ]
   },
   {
     "stars": 5,
@@ -96,7 +116,9 @@
     "weapon": "Меч",
     "sex": "Женский",
     "area": "Ли Юэ",
-    "image_url": "https://s1.zerochan.net/Genshin.Impact.600.3234385.jpg"
+    "images": [
+      "https://s1.zerochan.net/Genshin.Impact.600.3234385.jpg"
+    ]
   },
   {
     "stars": 4,
@@ -105,7 +127,9 @@
     "weapon": "Меч",
     "sex": "Мужской",
     "area": "Мондштадт",
-    "image_url": "https://s1.zerochan.net/Kaeya.600.3232344.jpg"
+    "images": [
+      "https://s1.zerochan.net/Kaeya.600.3232344.jpg"
+    ]
   },
   {
     "stars": 4,
@@ -114,7 +138,9 @@
     "weapon": "Катализатор",
     "sex": "Женский",
     "area": "Мондштадт",
-    "image_url": "https://s1.zerochan.net/Lisa.%28Genshin.Impact%29.600.3158990.jpg"
+    "images": [
+      "https://s1.zerochan.net/Lisa.%28Genshin.Impact%29.600.3158990.jpg"
+    ]
   },
   {
     "stars": 5,
@@ -123,7 +149,9 @@
     "weapon": "Катализатор",
     "sex": "Женский",
     "area": "Мондштадт",
-    "image_url": "https://s1.zerochan.net/Mona.%28Genshin.Impact%29.600.3233243.jpg"
+    "images": [
+      "https://s1.zerochan.net/Mona.%28Genshin.Impact%29.600.3233243.jpg"
+    ]
   },
   {
     "stars": 4,
@@ -132,7 +160,9 @@
     "weapon": "Катализатор",
     "sex": "Женский",
     "area": "Ли Юэ",
-    "image_url": "https://s1.zerochan.net/Ningguang.600.3198481.jpg"
+    "images": [
+      "https://s1.zerochan.net/Ningguang.600.3198481.jpg"
+    ]
   },
   {
     "stars": 4,
@@ -141,7 +171,9 @@
     "weapon": "Двуручный меч",
     "sex": "Женский",
     "area": "Мондштадт",
-    "image_url": "https://s1.zerochan.net/Noelle.%28Genshin.Impact%29.600.3201648.jpg"
+    "images": [
+      "https://s1.zerochan.net/Noelle.%28Genshin.Impact%29.600.3201648.jpg"
+    ]
   },
   {
     "stars": 4,
@@ -150,7 +182,9 @@
     "weapon": "Двуручный меч",
     "sex": "Мужской",
     "area": "Мондштадт",
-    "image_url": "https://s1.zerochan.net/Razor.%28Genshin.Impact%29.600.3133018.jpg"
+    "images": [
+      "https://s1.zerochan.net/Razor.%28Genshin.Impact%29.600.3133018.jpg"
+    ]
   },
   {
     "stars": 4,
@@ -159,7 +193,9 @@
     "weapon": "Катализатор",
     "sex": "Женский",
     "area": "Мондштадт",
-    "image_url": "https://s1.zerochan.net/Sucrose.600.3192679.jpg"
+    "images": [
+      "https://s1.zerochan.net/Sucrose.600.3192679.jpg"
+    ]
   },
   {
     "stars": 4,
@@ -168,7 +204,9 @@
     "weapon": "Меч",
     "sex": "Мужской",
     "area": "Ли Юэ",
-    "image_url": "https://s1.zerochan.net/Xingqiu.600.3202052.jpg"
+    "images": [
+      "https://s1.zerochan.net/Xingqiu.600.3202052.jpg"
+    ]
   },
   {
     "stars": 4,
@@ -177,7 +215,9 @@
     "weapon": "Двуручный меч",
     "sex": "Женский",
     "area": "Ли Юэ",
-    "image_url": "https://s1.zerochan.net/Xinyan.600.3208855.jpg"
+    "images": [
+      "https://s1.zerochan.net/Xinyan.600.3208855.jpg"
+    ]
   },
   {
     "stars": 4,
@@ -186,7 +226,9 @@
     "weapon": "Копье",
     "sex": "Женский",
     "area": "Ли Юэ",
-    "image_url": "https://static.zerochan.net/Xiangling.full.3103591.jpg"
+    "images": [
+      "https://static.zerochan.net/Xiangling.full.3103591.jpg"
+    ]
   },
   {
     "stars": 5,
@@ -195,7 +237,9 @@
     "weapon": "Копье",
     "sex": "Мужской",
     "area": "Ли Юэ",
-    "image_url": "https://s1.zerochan.net/Xiao.%28Genshin.Impact%29.600.3233955.jpg"
+    "images": [
+      "https://s1.zerochan.net/Xiao.%28Genshin.Impact%29.600.3233955.jpg"
+    ]
   },
   {
     "stars": 5,
@@ -204,7 +248,9 @@
     "weapon": "Лук",
     "sex": "Мужской",
     "area": "Снежная",
-    "image_url": "https://static.zerochan.net/Tartaglia.full.3217665.jpg"
+    "images": [
+      "https://static.zerochan.net/Tartaglia.full.3217665.jpg"
+    ]
   },
   {
     "stars": 4,
@@ -213,7 +259,9 @@
     "weapon": "Лук",
     "sex": "Женский",
     "area": "Мондштадт",
-    "image_url": "https://s1.zerochan.net/Fischl.600.3154768.jpg"
+    "images": [
+      "https://s1.zerochan.net/Fischl.600.3154768.jpg"
+    ]
   },
   {
     "stars": 5,
@@ -222,7 +270,9 @@
     "weapon": "Меч",
     "sex": "Женский",
     "area": "Ли Юэ",
-    "image_url": "https://s1.zerochan.net/Qiqi.600.3225824.jpg"
+    "images": [
+      "https://s1.zerochan.net/Qiqi.600.3225824.jpg"
+    ]
   },
   {
     "stars": 5,
@@ -231,7 +281,9 @@
     "weapon": "Копье",
     "sex": "Мужской",
     "area": "Ли Юэ",
-    "image_url": "https://static.zerochan.net/Zhongli.full.3218786.jpg"
+    "images": [
+      "https://static.zerochan.net/Zhongli.full.3218786.jpg"
+    ]
   },
   {
     "stars": 4,
@@ -240,7 +292,9 @@
     "weapon": "Двуручный меч",
     "sex": "Мужской",
     "area": "Ли Юэ",
-    "image_url": "https://s1.zerochan.net/Chongyun.600.3179699.jpg"
+    "images": [
+      "https://s1.zerochan.net/Chongyun.600.3179699.jpg"
+    ]
   },
   {
     "stars": 4,
@@ -249,7 +303,9 @@
     "weapon": "Лук",
     "sex": "Женский",
     "area": "Мондштадт",
-    "image_url": "https://s1.zerochan.net/Amber.%28Genshin.Impact%29.600.3111481.jpg"
+    "images": [
+      "https://s1.zerochan.net/Amber.%28Genshin.Impact%29.600.3111481.jpg"
+    ]
   },
   {
     "stars": 5,
@@ -258,7 +314,9 @@
     "weapon": "Копье",
     "sex": "Женский",
     "area": "Ли Юэ",
-    "image_url": "https://s1.zerochan.net/Hu.Tao.600.3232944.jpg"
+    "images": [
+      "https://s1.zerochan.net/Hu.Tao.600.3232944.jpg"
+    ]
   },
   {
     "stars": 5,
@@ -267,6 +325,8 @@
     "weapon": "Меч",
     "sex": "Женский",
     "area": "Инадзума",
-    "image_url": "https://static.zerochan.net/Ayaka.%28Genshin.Impact%29.full.3197380.jpg"
+    "images": [
+      "https://static.zerochan.net/Ayaka.%28Genshin.Impact%29.full.3197380.jpg"
+    ]
   }
 ]

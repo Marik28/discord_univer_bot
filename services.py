@@ -3,6 +3,7 @@ from discord import Embed
 from config import COMMANDS_DESCRIPTION
 from datetime_helpers import change_ending, WEEK_DAYS
 from embed_handlers import create_field_template, create_embed_template
+from redis_utils import rolls_counter
 
 
 def make_help_embed_message() -> Embed:
@@ -164,3 +165,6 @@ def process_teachers(subject):
     txt = f"Лектор: {lecturer}. Практику ведет: {practic_teacher}. Лабы ведет: {lab_teacher}"
     return create_field_template("Преподы", txt, inline=True)
 
+
+def increment_rolls(user_id: int) -> int:
+    return rolls_counter.increment((str(user_id)))
