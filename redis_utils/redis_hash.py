@@ -45,7 +45,7 @@ class RedisHashManager:
         self._redis.hdel(self._hash_name, item)
 
     def update(self, mapping: Mapping[str, str]) -> None:
-        """Добавляет или обновляет ключи со значениями из mapping"""
+        """Добавляет или обновляет ключи со значениями из `mapping`"""
         self._redis.hset(self._hash_name, mapping=mapping)
 
     def __contains__(self, item: str) -> bool:
@@ -73,3 +73,13 @@ class RedisHashManager:
         return iter(self.keys())
 
 
+class CounterHashManager(RedisHashManager):
+
+    def increment(self, key: str) -> int:
+        return self._redis.hincrby(self._hash_name, key)
+
+    def __getitem__(self, item: str) -> int:
+        return self.get(item, 0)
+
+    def get(self, item: str, default: int = None) -> Union[int, None]:
+        return int(super().get(item, default))
