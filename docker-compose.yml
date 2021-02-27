@@ -17,4 +17,3 @@ services:
       - COMMAND_PREFIX=.
     links:
       - "redis:db"
-
