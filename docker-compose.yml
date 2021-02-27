@@ -13,6 +13,7 @@ services:
       - DISCORD_BOT_API_TOKEN=NzgwNzQyMDEzODc1NzgxNjY0.X7zgqQ.Tcf2XPzOlNT0ujQPbUgW1Wb7gvE
       - ANIME_LINKS_DB=0
       - ANIME_LINKS_SET=anime_links
+      - COUNTER_HASH=
       - COMMAND_PREFIX=.
     links:
       - "redis:db"
