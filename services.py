@@ -3,6 +3,7 @@ from discord import Embed
 from config import COMMANDS_DESCRIPTION
 from datetime_helpers import change_ending, WEEK_DAYS
 from embed.embed_handlers import create_field_template, create_embed_template
+from models import UserStatistics
 from redis_utils import rolls_counter
 
 
@@ -168,3 +169,15 @@ def process_teachers(subject):
 
 def increment_rolls(user_id: int) -> int:
     return rolls_counter.increment((str(user_id)))
+
+
+def update_user_statistics(user_id: int, rolled_stars: int) -> None:
+    rolls_counter.increment((str(user_id)))
+    rolls_counter.increment(f"{user_id}_{rolled_stars}")
+
+
+def get_user_statistics(user_id: int) -> UserStatistics:
+    user = str(user_id)
+    keys = [user] + [f"{user}_{i}" for i in reversed(range(3, 6))]
+    user_statistics = rolls_counter.get_many(keys)
+    return UserStatistics(*[user_statistics[key] for key in keys])

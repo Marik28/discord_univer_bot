@@ -83,3 +83,8 @@ class CounterHashManager(RedisHashManager):
 
     def get(self, item: str, default: int = None) -> Union[int, None]:
         return int(super().get(item, default))
+
+    def get_many(self, *keys) -> dict:
+        response: list = self._redis.hmget(self._hash_name, *keys)
+        int_response = [int(value) if value is not None else 0 for value in response]
+        return dict(zip(*keys, int_response))

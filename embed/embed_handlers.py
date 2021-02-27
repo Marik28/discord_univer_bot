@@ -5,6 +5,7 @@ from discord import Embed
 
 from config import COMMAND_PREFIX
 from genshin.utils import generate_rating, get_rarity_color, get_element
+from models import UserStatistics
 from redis_utils import links_set_manager
 
 from .basic_embed_funcs import create_field_template, create_media_object_template
@@ -41,15 +42,19 @@ def make_embed_image() -> Embed:
     return Embed.from_dict(embed)
 
 
-def make_genshin_card(user_name: str, rolled_character: Union[dict, None], rarity: int, user_rolls_count: int) -> Embed:
+def make_genshin_card(user_name: str, rolled_character: Union[dict, None], rarity: int, user_statistics: UserStatistics) -> Embed:
     """Создает карточку с результатом ролла гачи"""
-
     title = f"Результат ролла {user_name}"
-    rolls_info = f"Всего роллов - {user_rolls_count}"
+    rolls_info = f"Всего роллов - {user_statistics.total} \n" \
+                 f"5-звездочные - {user_statistics.five} \n" \
+                 f"4-звездочные - {user_statistics.four} \n" \
+                 f"3-звездочные - {user_statistics.three} "
     color = get_rarity_color(rarity)
     stars = generate_rating(rarity)
+
     if rarity < 4:
-        description = f"Ну не везёт получается. {rolls_info} \n {stars}"
+        description = f"Твой ролл - {stars} \n" \
+                      f"Ну не везёт получается. {rolls_info} "
         return Embed.from_dict(create_embed_template(title=title, description=description, color=color,
                                                      allow_anime_thumbnail=False))
     else:

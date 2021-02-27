@@ -10,7 +10,8 @@ from exceptions import ErrorFromServer, InvalidImageLink
 from genshin.utils import roll_character, roll_star
 from redis_utils import links_set_manager
 from services import make_embed_day_schedule, make_embed_week_schedule, make_help_embed_message, \
-    make_embed_teacher_list, make_embed_subject_list, make_brief_subject_list, increment_rolls
+    make_embed_teacher_list, make_embed_subject_list, make_brief_subject_list, update_user_statistics, \
+    get_user_statistics
 
 bot = commands.Bot(command_prefix=config.COMMAND_PREFIX)
 
@@ -128,22 +129,24 @@ async def process_get_image_command(ctx: Context):
 @bot.command(aliases=["genshin", "геншин", "ролл", "roll", ])
 async def process_genshin_command(ctx: Context, rolls_count_arg: str = None):
     """Делает ролл на случайного перса из геншина. Отправляет карточку Embed."""
-    if rolls_count_arg is not None:
-        try:
-            rolls_count = int(rolls_count_arg)
-        except ValueError:
-            rolls_count = 1
-        else:
-            if rolls_count > 10:
-                rolls_count = 1
+    # if rolls_count_arg is not None:
+    #     try:
+    #         rolls_count = int(rolls_count_arg)
+    #     except ValueError:
+    #         rolls_count = 1
+    #     else:
+    #         if rolls_count > 10:
+    #             rolls_count = 1
     author: User = ctx.author
+    author_id = author.id
     stars = roll_star()
     if stars > 3:
         roll_result = roll_character(stars)
     else:
         roll_result = "Рофлан 3 звезды"
-    user_rolls_count = increment_rolls(author.id)
-    card = make_genshin_card(author.name, roll_result, stars, user_rolls_count)
+    update_user_statistics(author_id, stars)
+    statistics = get_user_statistics(author_id)
+    card = make_genshin_card(author.name, roll_result, stars, statistics)
     await ctx.send(embed=card)
 
 
