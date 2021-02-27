@@ -2,7 +2,7 @@ from discord import Embed
 
 from config import COMMANDS_DESCRIPTION
 from datetime_helpers import change_ending, WEEK_DAYS
-from embed_handlers import create_field_template, create_embed_template
+from embed.embed_handlers import create_field_template, create_embed_template
 from redis_utils import rolls_counter
 
 

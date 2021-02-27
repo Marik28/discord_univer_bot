@@ -5,9 +5,9 @@ from discord.ext.commands import Context
 from api_helpers import get_teacher_list, get_day_schedule, get_week_schedule, get_subject_list
 import config
 from datetime_helpers import from_word_to_day, DAY_SPECIAL_WORDS, get_week_parity
-from embed_handlers import make_embed_image, make_genshin_card
+from embed.embed_handlers import make_embed_image, make_genshin_card
 from exceptions import ErrorFromServer, InvalidImageLink
-from genshin.utils import roll_character
+from genshin.utils import roll_character, roll_star
 from redis_utils import links_set_manager
 from services import make_embed_day_schedule, make_embed_week_schedule, make_help_embed_message, \
     make_embed_teacher_list, make_embed_subject_list, make_brief_subject_list, increment_rolls
@@ -125,13 +125,25 @@ async def process_get_image_command(ctx: Context):
     await ctx.send(embed=msg)
 
 
-@bot.command(aliases=["genshin", "геншин", "ролл", "roll"])
-async def process_genshin_command(ctx: Context):
+@bot.command(aliases=["genshin", "геншин", "ролл", "roll", ])
+async def process_genshin_command(ctx: Context, rolls_count_arg: str = None):
     """Делает ролл на случайного перса из геншина. Отправляет карточку Embed."""
+    if rolls_count_arg is not None:
+        try:
+            rolls_count = int(rolls_count_arg)
+        except ValueError:
+            rolls_count = 1
+        else:
+            if rolls_count > 10:
+                rolls_count = 1
     author: User = ctx.author
-    roll_result = roll_character()
+    stars = roll_star()
+    if stars > 3:
+        roll_result = roll_character(stars)
+    else:
+        roll_result = "Рофлан 3 звезды"
     user_rolls_count = increment_rolls(author.id)
-    card = make_genshin_card(author.name, roll_result, user_rolls_count)
+    card = make_genshin_card(author.name, roll_result, stars, user_rolls_count)
     await ctx.send(embed=card)
 
 
