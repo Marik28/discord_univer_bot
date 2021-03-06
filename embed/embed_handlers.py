@@ -5,7 +5,7 @@ from discord import Embed
 
 from config import COMMAND_PREFIX
 from genshin.utils import generate_rating, get_rarity_color, get_element
-from models import UserStatistics
+from models.user_statistics import UserStatistics
 from redis_utils import links_set_manager
 
 from .basic_embed_funcs import create_field_template, create_media_object_template
