@@ -7,7 +7,7 @@ from redis import Redis
 class RedisHashManager:
     """Класс-обертка над Hash Redis. Имеет API как встроенный `dict`"""
 
-    def __init__(self, redis_: Redis, hash_name: str):
+    def __init__(self, redis_: Redis, hash_name: str) -> None:
         """Для инициализации принимает `Redis` и имя Hash `hash_name`, с которым будет работать.
         Redis обязательно должен быть инициализирован с `decode_responses=True`"""
         self._redis = redis_
@@ -29,7 +29,7 @@ class RedisHashManager:
     def keys(self) -> KeysView[str]:
         """Возвращает множество всех ключей в виде KeysView"""
         keys: list[str] = self._redis.hkeys(self._hash_name)
-        return KeysView(set(keys))
+        return KeysView(keys)
 
     def items(self) -> ItemsView[str, str]:
         """Возвращает множество пар ключ-значение в виде ItemsView"""
@@ -73,10 +73,13 @@ class RedisHashManager:
         return iter(self.keys())
 
 
+# TODO: можно ли как-то сделать, чтобы не переписывать каждый метод
 class CounterHashManager(RedisHashManager):
+    """Наследует функционал RedisHashManager, но при это должен возвращать только всегда int,
+     и имеет пару дополнительных методов"""
 
-    def increment(self, key: str) -> int:
-        return self._redis.hincrby(self._hash_name, key)
+    def increment(self, key: str, amount: int = 1) -> int:
+        return self._redis.hincrby(self._hash_name, key, amount=amount)
 
     def __getitem__(self, item: str) -> int:
         return self.get(item, 0)
@@ -84,7 +87,10 @@ class CounterHashManager(RedisHashManager):
     def get(self, item: str, default: int = None) -> Union[int, None]:
         return int(super().get(item, default))
 
-    def get_many(self, *keys) -> dict:
+    def get_many(self, *keys: str) -> dict[str, int]:
         response: list = self._redis.hmget(self._hash_name, *keys)
         int_response = [int(value) if value is not None else 0 for value in response]
-        return dict(zip(*keys, int_response))
+        return dict(zip(keys, int_response))
+
+    def __iter__(self) -> Iterator[int]:
+        return (int(value) for value in super().__iter__())
