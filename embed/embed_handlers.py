@@ -42,7 +42,8 @@ def make_embed_image() -> Embed:
     return Embed.from_dict(embed)
 
 
-def make_genshin_card(user_name: str, rolled_character: Union[dict, None], rarity: int, user_statistics: UserStatistics) -> Embed:
+def make_genshin_card(user_name: str, rolled_character: Union[dict, None],
+                      rarity: int, user_statistics: UserStatistics) -> Embed:
     """Создает карточку с результатом ролла гачи"""
     title = f"Результат ролла {user_name}"
     rolls_info = f"Всего роллов - {user_statistics.total} \n" \

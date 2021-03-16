@@ -11,6 +11,11 @@ GOLD_COLOR = 0xFFD700
 PURPLE_COLOR = 0x800080
 BLUE_COLOR = 0x0F52BA
 
+rarity_colors = {
+    5: GOLD_COLOR,
+    4: PURPLE_COLOR,
+    3: BLUE_COLOR,
+}
 
 elements = {
     "Электро": "⚡",
@@ -26,11 +31,9 @@ elements = {
 # 3 звезды  - 85 %
 # сумма     - 100 %
 
-five_stars_list = [5 for i in range(2)]
-four_stars_list = [4 for i in range(13)]
-three_stars_list = [3 for i in range(85)]
-# # two_stars_list = [2 for i in range(28)]
-# # one_star_list = [1 for i in range(40)]
+five_stars_list = [5 for _ in range(2)]
+four_stars_list = [4 for _ in range(13)]
+three_stars_list = [3 for _ in range(85)]
 
 # для тестов
 # five_stars_list = [5 for i in range(45)]
@@ -46,16 +49,9 @@ with open(path_to_json) as file:
     characters_list: list[dict] = json.load(file)
 
 
-rarity_colors = {
-    5: GOLD_COLOR,
-    4: PURPLE_COLOR,
-    3: BLUE_COLOR,
-}
-
-
 def make_rating_list():
     stars_dict = {}
-    for stars in range(4, 6):
+    for stars in (4, 5):
         stars_dict[stars] = [char for char in characters_list if char["stars"] == stars]
     return stars_dict
 
@@ -65,8 +61,9 @@ def roll_star() -> int:
     return roll
 
 
-def generate_rating(stars: int) -> str:
-    rating = FILLED_STAR * stars
+def generate_rating(number_of_stars: int) -> str:
+    """Отрисовывет звездочки по 5-звездночной шкале"""
+    rating = FILLED_STAR * number_of_stars
     return f"{rating:{EMPTY_STAR}<5}"
 
 
@@ -74,9 +71,6 @@ stars_to_chars = make_rating_list()
 
 
 def roll_character(rolled_star: int) -> dict:
-    # rolled_star = roll_star()
-    # if rolled_star < 4:
-    #     return None
     rolled_character = random.choice(stars_to_chars[rolled_star])
     return rolled_character
 

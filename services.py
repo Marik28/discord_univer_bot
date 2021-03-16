@@ -177,7 +177,10 @@ def update_user_statistics(user_id: int, rolled_stars: int) -> None:
 
 
 def get_user_statistics(user_id: int) -> UserStatistics:
-    user = str(user_id)
-    keys = [user] + [f"{user}_{i}" for i in reversed(range(3, 6))]
-    user_statistics = rolls_counter.get_many(keys)
+    keys = form_statistics_keys(user_id)
+    user_statistics = rolls_counter.get_many(*keys)
     return UserStatistics(*[user_statistics[key] for key in keys])
+
+
+def form_statistics_keys(user_id) -> list[str]:
+    return [str(user_id)] + [f"{user_id}_{i}" for i in reversed(range(3, 6))]
