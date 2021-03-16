@@ -3,3 +3,4 @@ venv/
 .idea
 __pycache__
 *.rdb
+/genshin/download/html/genshin_1.html
